@@ -11,6 +11,7 @@ services:
       - COOKIE_SECURE=1
       - ADMIN_PASSWORD=${ADMIN_PASSWORD:-}
       - PUBLIC_ORIGINS=${PUBLIC_ORIGINS:-}
+      - SITE_URL=${SITE_URL:-}
     # เปิดเฉพาะ localhost ของ VPS — ให้ Nginx/Cloudflare Tunnel ชี้เข้ามา (พอร์ต 3010 เลี่ยงชนกับระบบอื่นบน VPS (ใช้ 3001-3003, 4002, 4100, 5000, 8080, 8082))
     ports:
       - "127.0.0.1:3010:3001"

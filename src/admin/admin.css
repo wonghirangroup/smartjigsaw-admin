@@ -70,3 +70,22 @@ code { background: var(--ground); padding: 1px 6px; border-radius: 5px; font-siz
 .a-size { font-family: var(--font-head); color: var(--primary-ink); font-size: 1.2rem; }
 .a-ratio { width: 100%; background: repeating-linear-gradient(45deg, #eef2f7, #eef2f7 10px, #e1e7f0 10px, #e1e7f0 20px); border: 2px dashed #9fb0cf; border-radius: 8px; display: grid; place-items: center; color: var(--ink-2); font-weight: 600; margin: 8px 0; }
 @media print { .a-side, .a-toast, .a-btn { display: none !important; } .a-shell { display: block; } .a-card { break-inside: avoid; } }
+
+/* ===== ตัวอย่างหน้าเว็บ (preview) ===== */
+.a-shell.with-preview { grid-template-columns: 240px minmax(0, 1fr) minmax(380px, 46%); }
+.a-shell.with-preview .a-main { max-width: none; }
+.a-preview-pane { position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; background: #e9edf3; border-left: 1px solid var(--line); min-width: 0; }
+.a-preview-bar { display: flex; gap: 8px; align-items: center; justify-content: space-between; padding: 10px 12px; background: #fff; border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+.a-preview-bar select { width: auto; padding: 6px 10px; border-radius: 8px; font-size: 0.88rem; }
+.a-preview-bar .a-btn { padding: 6px 9px; }
+.a-preview-bar .a-btn.on { background: var(--ink); color: #fff; border-color: var(--ink); }
+.a-preview-hint { margin: 0; padding: 6px 12px; background: #fff8e6; font-size: 0.78rem; }
+.a-preview-box { flex: 1; overflow: hidden; position: relative; }
+.a-preview-box iframe { position: absolute; top: 0; border: 0; background: #fff; transform-origin: top left; box-shadow: 0 2px 14px rgba(15, 31, 61, 0.25); }
+.a-linkbtn-side { background: none; border: 0; cursor: pointer; text-align: left; padding: 0; font: inherit; color: inherit; display: inline-flex; gap: 6px; align-items: center; }
+@media (max-width: 1179px) {
+  .a-shell.with-preview { grid-template-columns: 240px minmax(0, 1fr); }
+  .a-shell.with-preview .a-preview-pane { position: fixed; inset: 0; z-index: 100; height: 100vh; }
+}
+@media (max-width: 820px) { .a-shell.with-preview { grid-template-columns: 1fr; } }
+@media print { .a-preview-pane { display: none !important; } }

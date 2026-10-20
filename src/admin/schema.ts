@@ -181,7 +181,7 @@ export const SECTIONS: Section[] = [
     fields: [{ key: 'label', label: 'ชื่อที่แสดง', type: 'text' }, { key: 'href', label: 'ลิงก์', type: 'text', help: 'ต้องขึ้นต้นด้วย https://' }],
   },
   {
-    key: 'PRODUCTS', label: 'สินค้า', group: 'หน้าอื่นๆ', kind: 'list', titleKey: 'name', fixed: true,
+    key: 'PRODUCTS', label: 'บริการ (4 ด้าน)', group: 'หน้าอื่นๆ', kind: 'list', titleKey: 'name', fixed: true,
     help: 'แก้ข้อความของสินค้าที่มีอยู่ (เพิ่ม/ลบสินค้าและเปลี่ยนไอคอนต้องแก้โค้ดใน src/site.ts)',
     fields: [
       { key: 'name', label: 'ชื่อสินค้า', type: 'text' }, { key: 'short', label: 'ประโยคสั้น', type: 'text' },
@@ -204,12 +204,12 @@ export const SECTIONS: Section[] = [
     ],
   },
   {
-    key: 'SERVICES', label: 'บริการหลังการขาย', group: 'หน้าอื่นๆ', kind: 'list', titleKey: 'title',
+    key: 'SERVICES', label: 'วิธีทำงานของเรา', group: 'หน้าอื่นๆ', kind: 'list', titleKey: 'title',
     blank: () => ({ title: 'บริการใหม่', text: '' }),
     fields: [{ key: 'title', label: 'ชื่อบริการ', type: 'text' }, { key: 'text', label: 'รายละเอียด', type: 'textarea' }],
   },
   {
-    key: 'COURSES', label: 'หลักสูตรอบรม', group: 'หน้าอื่นๆ', kind: 'list', titleKey: 'title',
+    key: 'COURSES', label: 'หลักสูตรอบรม (ยังไม่เปิด)', group: 'หน้าอื่นๆ', kind: 'list', titleKey: 'title',
     blank: () => ({ id: `course-${Date.now().toString(36)}`, title: 'หลักสูตรใหม่', level: 'พื้นฐาน', hours: 4, price: 'ฟรี', topics: [''] }),
     fields: [
       { key: 'title', label: 'ชื่อหลักสูตร', type: 'text' }, { key: 'id', label: 'รหัสหลักสูตร', type: 'text' },

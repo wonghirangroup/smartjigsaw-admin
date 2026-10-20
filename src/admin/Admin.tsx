@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react'
-import { ArrowDown, ArrowUp, Copy, ExternalLink, Image as ImageIcon, KeyRound, LogOut, Mail, Plus, Trash2, Upload, X } from 'lucide-react'
+import { ArrowDown, ArrowUp, Copy, ExternalLink, Eye, EyeOff, Image as ImageIcon, KeyRound, LogOut, Mail, Monitor, Plus, RotateCw, Smartphone, Trash2, Upload, X } from 'lucide-react'
 import { EDITABLE, applyOverride, safeUrl } from '../site'
 import { FILE_RULES, IMAGE_SPECS, SECTIONS, VIDEO_SPEC, type Field, type Section } from './schema'
 import './admin.css'
@@ -151,17 +151,23 @@ function ObjectFields({ fields, value, onChange, toast }: { fields: Field[]; val
   return <>{fields.map(f => <FieldEditor key={f.key} f={f} value={value?.[f.key]} onChange={v => onChange({ ...value, [f.key]: v })} toast={toast} />)}</>
 }
 
-function ListEditor({ fields, titleKey, blank, value, onChange, toast, fixed, nested }: {
-  fields: Field[]; titleKey?: string; blank?: () => Record<string, unknown>; value: Json; onChange: (v: Json) => void; toast: (t: string, bad?: boolean) => void; fixed?: boolean; nested?: boolean
+function ListEditor({ fields, titleKey, blank, value, onChange, toast, fixed, nested, focus }: {
+  fields: Field[]; titleKey?: string; blank?: () => Record<string, unknown>; value: Json; onChange: (v: Json) => void; toast: (t: string, bad?: boolean) => void; fixed?: boolean; nested?: boolean; focus?: Focus | null
 }) {
   const items: Json[] = Array.isArray(value) ? value : []
-  const [open, setOpen] = useState<number | null>(nested ? null : 0)
+  const [open, setOpen] = useState<number | null>(nested ? null : (focus?.index ?? 0))
+  const root = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    if (nested || focus?.index == null) return
+    setOpen(focus.index)
+    window.setTimeout(() => root.current?.querySelector('.a-item.open')?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 60)
+  }, [focus?.tick]) // eslint-disable-line react-hooks/exhaustive-deps
   const move = (i: number, d: number) => {
     const j = i + d; if (j < 0 || j >= items.length) return
     const c = [...items]; [c[i], c[j]] = [c[j], c[i]]; onChange(c); setOpen(j)
   }
   return (
-    <div className="a-stack">
+    <div className="a-stack" ref={root}>
       {items.map((it, i) => {
         const title = String(it?.[titleKey ?? ''] ?? '').trim() || `รายการที่ ${i + 1}`
         const isOpen = open === i
@@ -203,11 +209,16 @@ function validate(s: Section, v: Json): string | null {
   return null
 }
 
-function SectionEditor({ section, toast }: { section: Section; toast: (t: string, bad?: boolean) => void }) {
+function SectionEditor({ section, toast, onDraft, focus }: { section: Section; toast: (t: string, bad?: boolean) => void; onDraft: (key: string, value: Json) => void; focus: Focus | null }) {
   const [value, setValue] = useState<Json>(() => liveValue(section))
   const [dirty, setDirty] = useState(false)
   const [saving, setSaving] = useState(false)
-  const change = (v: Json) => { setValue(v); setDirty(true) }
+  const dirtyRef = useRef(false)
+  dirtyRef.current = dirty
+  // ทุกครั้งที่แก้ฟอร์ม ส่งร่างไปแสดงในหน้า preview ทันที (ยังไม่บันทึกจริง)
+  const change = (v: Json) => { setValue(v); setDirty(true); onDraft(section.key, v) }
+  // ออกจากหมวดโดยไม่บันทึก → คืนหน้า preview เป็นค่าที่บันทึกไว้
+  useEffect(() => () => { if (dirtyRef.current) onDraft(section.key, liveValue(section)) }, []) // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => {
     const warn = (e: BeforeUnloadEvent) => { if (dirty) e.preventDefault() }
     window.addEventListener('beforeunload', warn); return () => window.removeEventListener('beforeunload', warn)
@@ -240,7 +251,7 @@ function SectionEditor({ section, toast }: { section: Section; toast: (t: string
       <div className="a-card">
         {section.kind === 'object'
           ? <ObjectFields fields={section.fields} value={value} onChange={change} toast={toast} />
-          : <ListEditor fields={section.fields} titleKey={section.titleKey} blank={section.blank} value={value} onChange={change} toast={toast} fixed={section.fixed} />}
+          : <ListEditor fields={section.fields} titleKey={section.titleKey} blank={section.blank} value={value} onChange={change} toast={toast} fixed={section.fixed} focus={focus} />}
       </div>
     </section>
   )
@@ -356,6 +367,47 @@ function Password({ toast }: { toast: (t: string, bad?: boolean) => void }) {
   )
 }
 
+// ---------- ตัวอย่างหน้าเว็บ (Preview) ----------
+interface Focus { key: string; index: number | null; tick: number }
+const PAGES: [string, string][] = [['/', 'หน้าแรก'], ['/products', 'บริการ'], ['/services', 'วิธีทำงาน'], ['/about', 'เกี่ยวกับเรา'], ['/knowledge', 'ศูนย์ความรู้'], ['/customers', 'ลูกค้า'], ['/contact', 'ติดต่อเรา']]
+
+function Preview({ siteUrl, frame, path, onClose }: { siteUrl: string; frame: React.RefObject<HTMLIFrameElement>; path: string; onClose: () => void }) {
+  const [device, setDevice] = useState<'desktop' | 'mobile'>('desktop')
+  const [size, setSize] = useState({ w: 600, h: 700 })
+  const box = useRef<HTMLDivElement>(null)
+  const origin = new URL(siteUrl).origin
+  useEffect(() => {
+    const el = box.current; if (!el) return
+    const ro = new ResizeObserver(() => setSize({ w: el.clientWidth, h: el.clientHeight }))
+    ro.observe(el); setSize({ w: el.clientWidth, h: el.clientHeight }); return () => ro.disconnect()
+  }, [])
+  const design = device === 'desktop' ? 1280 : 390
+  const scale = Math.min(1, size.w / design)
+  const goto = (p: string) => frame.current?.contentWindow?.postMessage({ type: 'sj-goto', path: p }, origin)
+  return (
+    <aside className="a-preview-pane" aria-label="ตัวอย่างหน้าเว็บ">
+      <div className="a-preview-bar">
+        <b>ตัวอย่างหน้าเว็บ</b>
+        <select value={PAGES.some(p => p[0] === path) ? path : ''} onChange={e => goto(e.target.value)} aria-label="เลือกหน้าที่จะดู">
+          {!PAGES.some(p => p[0] === path) && <option value="">{path}</option>}
+          {PAGES.map(([p, l]) => <option key={p} value={p}>{l}</option>)}
+        </select>
+        <div className="a-row">
+          <button className={`a-btn ghost${device === 'desktop' ? ' on' : ''}`} onClick={() => setDevice('desktop')} aria-label="มุมมองคอมพิวเตอร์" title="คอมพิวเตอร์"><Monitor size={15} /></button>
+          <button className={`a-btn ghost${device === 'mobile' ? ' on' : ''}`} onClick={() => setDevice('mobile')} aria-label="มุมมองมือถือ" title="มือถือ"><Smartphone size={15} /></button>
+          <button className="a-btn ghost" onClick={() => { if (frame.current) frame.current.src = frame.current.src }} aria-label="โหลดตัวอย่างใหม่" title="โหลดใหม่"><RotateCw size={15} /></button>
+          <button className="a-btn ghost close" onClick={onClose} aria-label="ซ่อนตัวอย่าง"><EyeOff size={15} /></button>
+        </div>
+      </div>
+      <p className="a-note a-preview-hint">คลิกส่วนใดของเว็บเพื่อไปแก้ที่ฟอร์มนั้น · สิ่งที่พิมพ์จะขึ้นในตัวอย่างทันที แต่จะแสดงจริงบนเว็บเมื่อกด “บันทึก”</p>
+      <div className="a-preview-box" ref={box}>
+        <iframe ref={frame} title="ตัวอย่างหน้าเว็บ" src={`${siteUrl}/?sj-preview=1`}
+          style={{ width: design, height: size.h / scale, transform: `scale(${scale})`, marginInline: device === 'mobile' ? 'auto' : 0, left: device === 'mobile' ? (size.w - design * scale) / 2 : 0 }} />
+      </div>
+    </aside>
+  )
+}
+
 // ---------- เข้าสู่ระบบ + โครงหน้า ----------
 function Login({ onDone }: { onDone: () => void }) {
   const [err, setErr] = useState('')
@@ -370,7 +422,7 @@ function Login({ onDone }: { onDone: () => void }) {
         <label className="a-field"><span className="a-label">รหัสผ่าน</span><input name="password" type="password" required autoFocus autoComplete="current-password" /></label>
         {err && <div className="a-err" role="alert">{err}</div>}
         <button className="a-btn primary" type="submit">เข้าสู่ระบบ</button>
-        <p className="a-note">รหัสผ่านเริ่มต้นแสดงในหน้าต่าง terminal ที่รัน <code>npm run server</code> ครั้งแรก</p>
+        <p className="a-note">รหัสผ่านตั้งโดยผู้ดูแลระบบ (ตัวแปร ADMIN_PASSWORD บนเซิร์ฟเวอร์)</p>
       </form>
     </div>
   )
@@ -380,6 +432,30 @@ export default function Admin() {
   const [auth, setAuth] = useState<'loading' | 'out' | 'in' | 'down'>('loading')
   const [tab, setTab] = useState<string>(SECTIONS[0].key)
   const { show, node } = useToast()
+  const [siteUrl, setSiteUrl] = useState('')
+  const [showPreview, setShowPreview] = useState(() => window.innerWidth >= 1180)
+  const [focus, setFocus] = useState<Focus | null>(null)
+  const [pvPath, setPvPath] = useState('/')
+  const frame = useRef<HTMLIFrameElement>(null)
+  const drafts = useRef(new Map<string, Json>())
+  const siteOrigin = (() => { try { return siteUrl ? new URL(siteUrl).origin : '' } catch { return '' } })()
+  const sendDraft = useCallback((key: string, value: Json) => {
+    if (!siteOrigin) return
+    frame.current?.contentWindow?.postMessage({ type: 'sj-preview', key, value: clone(value) }, siteOrigin)
+  }, [siteOrigin])
+  const onDraft = useCallback((key: string, value: Json) => { drafts.current.set(key, value); sendDraft(key, value) }, [sendDraft])
+  useEffect(() => { fetch('/api/config').then(r => r.json()).then(d => setSiteUrl(d.siteUrl || '')).catch(() => {}) }, [])
+  useEffect(() => {
+    if (!siteOrigin) return
+    const onMsg = (e: MessageEvent) => {
+      if (e.origin !== siteOrigin || e.source !== frame.current?.contentWindow) return
+      const d = e.data; if (!d || typeof d !== 'object') return
+      if (d.type === 'sj-ready') drafts.current.forEach((v, k) => sendDraft(k, v))
+      else if (d.type === 'sj-path' && typeof d.path === 'string') setPvPath(d.path)
+      else if (d.type === 'sj-focus' && SECTIONS.some(s => s.key === d.key)) { setTab(d.key); setFocus({ key: d.key, index: typeof d.index === 'number' ? d.index : null, tick: Date.now() }) }
+    }
+    window.addEventListener('message', onMsg); return () => window.removeEventListener('message', onMsg)
+  }, [siteOrigin, sendDraft])
   const check = useCallback(() => {
     fetch('/api/me').then(r => r.json()).then(d => setAuth(d.admin ? 'in' : 'out')).catch(() => setAuth('down'))
   }, [])
@@ -394,10 +470,11 @@ export default function Admin() {
   const groups = [...new Set(SECTIONS.map(s => s.group))]
   const section = SECTIONS.find(s => s.key === tab)
   return (
-    <div className="a-shell">
+    <div className={`a-shell${siteUrl && showPreview ? ' with-preview' : ''}`}>
       <aside className="a-side">
         <div className="a-brand">จัดการเว็บไซต์</div>
-        <a className="a-link" href={import.meta.env.VITE_SITE_URL || '/'} target="_blank" rel="noopener"><ExternalLink size={14} />ดูหน้าเว็บ</a>
+        <a className="a-link" href={siteUrl || '/'} target="_blank" rel="noopener"><ExternalLink size={14} />เปิดหน้าเว็บจริง</a>
+        {siteUrl && !showPreview && <button className="a-link a-linkbtn-side" onClick={() => setShowPreview(true)}><Eye size={14} />แสดงตัวอย่างเว็บ</button>}
         {groups.map(g => (
           <nav key={g} aria-label={g}>
             <div className="a-group">{g}</div>
@@ -414,8 +491,9 @@ export default function Admin() {
         </nav>
       </aside>
       <main className="a-main">
-        {section ? <SectionEditor key={section.key} section={section} toast={show} /> : tab === '_guide' ? <Guide /> : tab === '_media' ? <Library toast={show} /> : tab === '_msgs' ? <Messages toast={show} /> : <Password toast={show} />}
+        {section ? <SectionEditor key={section.key} section={section} toast={show} onDraft={onDraft} focus={focus?.key === section.key ? focus : null} /> : tab === '_guide' ? <Guide /> : tab === '_media' ? <Library toast={show} /> : tab === '_msgs' ? <Messages toast={show} /> : <Password toast={show} />}
       </main>
+      {siteUrl && showPreview && <Preview siteUrl={siteUrl} frame={frame} path={pvPath} onClose={() => setShowPreview(false)} />}
       {node}
     </div>
   )

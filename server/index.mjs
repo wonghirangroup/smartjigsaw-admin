@@ -123,6 +123,10 @@ app.use(['/api/content', '/api/contact', '/uploads'], (req, res, next) => {
 })
 
 // ---------- เนื้อหา ----------
+// ที่อยู่เว็บสาธารณะ ใช้แสดงตัวอย่าง (preview) ในหน้าแอดมิน — ตั้งด้วย SITE_URL (ถ้าไม่ตั้ง ใช้ origin แรกของ PUBLIC_ORIGINS)
+const SITE_URL = (process.env.SITE_URL || ORIGINS[0] || '').replace(/\/$/, '')
+app.get('/api/config', (_req, res) => res.json({ siteUrl: SITE_URL }))
+
 app.get('/api/content', (_req, res) => { res.setHeader('Cache-Control', 'no-cache'); res.json(content) })
 
 app.put('/api/content/:key', requireAuth, json, (req, res) => {
