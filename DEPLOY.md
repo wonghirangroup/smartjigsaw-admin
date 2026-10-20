@@ -15,8 +15,8 @@ git clone https://github.com/wonghirangroup/smartjigsaw-admin.git
 cd smartjigsaw-admin
 cat > .env <<'EOF'
 ADMIN_PASSWORD=ตั้งรหัสผ่านยาวๆ
-PUBLIC_ORIGINS=https://www.smartjigsaw.com,https://smartjigsaw.com
-VITE_SITE_URL=https://www.smartjigsaw.com
+PUBLIC_ORIGINS=https://www.smartjigsaw.net,https://smartjigsaw.net
+VITE_SITE_URL=https://www.smartjigsaw.net
 EOF
 ```
 `PUBLIC_ORIGINS` ต้องตรงกับโดเมนเว็บสาธารณะเป๊ะ (รวม https และไม่มี / ท้าย) ใส่ได้หลายค่าคั่นด้วยจุลภาค
@@ -60,4 +60,4 @@ cd smartjigsaw-admin && git pull && docker compose build && docker compose up -d
 
 ## ตรวจว่าใช้ได้
 - เปิด https://admin.jigsawbase.com → เห็นหน้าล็อกอิน แล้วเข้าด้วย `ADMIN_PASSWORD`
-- `curl -I -H "Origin: https://www.smartjigsaw.com" https://admin.jigsawbase.com/api/content` ต้องเห็น `Access-Control-Allow-Origin`
+- `curl -I -H "Origin: https://www.smartjigsaw.net" https://admin.jigsawbase.com/api/content` ต้องเห็น `Access-Control-Allow-Origin`
