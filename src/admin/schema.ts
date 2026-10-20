@@ -1,0 +1,220 @@
+// โครงสร้างฟอร์มของหน้าแอดมิน — หนึ่ง Section ต่อหนึ่งคีย์ใน EDITABLE (src/site.ts)
+// เพิ่มข้อมูลใหม่: เพิ่มคีย์ใน site.ts + server/index.mjs (KEYS) แล้วประกาศ Section ที่นี่
+import { PRODUCTS } from '../site'
+
+export type FieldType = 'text' | 'textarea' | 'number' | 'color' | 'date' | 'select' | 'image' | 'video' | 'strings' | 'list'
+
+// ขนาดภาพที่ฝ่ายออกแบบต้องทำ (px) — คำนวณจากกรอบจริงบนเว็บ x2 สำหรับจอ Retina
+// ถ้าเปลี่ยน layout ใน styles.css ต้องทบทวนตารางนี้และไฟล์ docs/IMAGE-SPECS.md
+export interface ImageSpec { label: string; w: number; h: number; shown: string; where: string; tips: string[]; formats: string }
+export const IMAGE_SPECS: Record<string, ImageSpec> = {
+  hero: { label: 'Hero (สไลด์หน้าแรก)', w: 1200, h: 1020, shown: 'แสดงจริงประมาณ 480×408', where: 'กรอบภาพด้านขวาของสไลด์ มุมโค้ง 26px',
+    tips: ['ซ่อนบนมือถือ (หน้าจอแคบกว่า 920px) — ห้ามใส่ข้อมูลสำคัญที่ต้องอ่านเฉพาะในภาพ', 'เว้นมุมซ้ายบนและมุมขวาล่างให้โล่ง เพราะมีป้ายข้อความลอยทับ', 'ภาพถูกครอปตรงกลางแบบเต็มกรอบ ให้วางจุดเด่นไว้กลางภาพ'], formats: 'PNG/WebP/JPG' },
+  ad: { label: 'แบนเนอร์โฆษณา/โปรโมชัน', w: 2200, h: 600, shown: 'แสดงจริงกว้าง ~1100 สูง 220–300', where: 'พื้นหลังเต็มความกว้างของแบนเนอร์',
+    tips: ['ข้อความสีขาวและปุ่มจะวางทับ "ครึ่งซ้าย" ของภาพ — ทำครึ่งซ้ายให้สีเข้ม/ไม่มีรายละเอียด', 'วางจุดเด่นไว้ฝั่งขวา (เห็นเฉพาะเดสก์ท็อป)', 'บนมือถือเห็นเฉพาะ "แถบกลาง" ราว 30% ของภาพ (x 770–1430) และข้อความทับทั้งแถบ — แถบนี้ต้องเข้ม/เรียบ', 'อย่าใส่ตัวหนังสือลงในภาพ เพราะแก้ไขไม่ได้และตกขอบบนมือถือ'], formats: 'JPG/WebP' },
+  cover: { label: 'ภาพกิจกรรม / ข่าว / บริษัท', w: 1280, h: 720, shown: 'แสดงจริงกว้าง ~350–450', where: 'ภาพปกของการ์ดกิจกรรม ข่าว และส่วน Our Company (สัดส่วน 16:9)',
+    tips: ['สัดส่วน 16:9 เสมอ', 'ข้อความบนเว็บอยู่ใต้ภาพ ไม่ทับภาพ จึงใส่ข้อความในภาพได้บ้าง แต่ควรเว้นขอบรอบ 5%'], formats: 'JPG/WebP' },
+  logo: { label: 'โลโก้ลูกค้า', w: 400, h: 160, shown: 'แสดงจริงสูงไม่เกิน 40 กว้างไม่เกิน ~150', where: 'ช่องโลโก้ในส่วนลูกค้าของเรา',
+    tips: ['PNG พื้นหลังโปร่งใส (ไม่รับไฟล์ SVG)', 'ครอปชิดตัวโลโก้ เว้นขอบรอบไม่เกิน 10%', 'ภาพจะถูกย่อให้พอดีกรอบโดยไม่บิดสัดส่วน — โลโก้แนวนอนจะดูชัดที่สุด', 'เมื่อไม่ใส่โลโก้ ระบบแสดงเป็นชื่อลูกค้าแทน'], formats: 'PNG' },
+  thumb: { label: 'ภาพปกวิดีโอ', w: 1280, h: 720, shown: 'แสดงจริงกว้าง ~350', where: 'ภาพก่อนกดเล่นของวิดีโอที่อัปโหลดเป็นไฟล์ (วิดีโอ YouTube ใช้พื้นสีแทน)',
+    tips: ['สัดส่วน 16:9 เสมอ'], formats: 'JPG/WebP' },
+}
+export const VIDEO_SPEC = { w: 1920, h: 1080, note: 'MP4 (H.264 + AAC) หรือ WebM · สัดส่วน 16:9 · ไม่เกิน 200MB (แนะนำบีบให้ไม่เกิน 50MB เพื่อให้โหลดเร็ว) · ความยาวแนะนำไม่เกิน 3 นาที' }
+export const FILE_RULES = 'ไฟล์รูปไม่เกิน 8MB (แนะนำ 300–600KB) · รับ JPG PNG WebP GIF · ไม่รับ SVG · ตั้งชื่อไฟล์เป็นอังกฤษ ไม่มีอักขระพิเศษ'
+
+export interface Field {
+  key: string; label: string; type: FieldType; help?: string
+  spec?: keyof typeof IMAGE_SPECS  // image: ขนาดที่แนะนำ (แสดงใต้ช่อง + เตือนเมื่อภาพเล็กไป)
+  options?: () => [string, string][]
+  fields?: Field[]          // list: ฟิลด์ย่อยของแต่ละรายการ
+  titleKey?: string         // list: ฟิลด์ที่ใช้เป็นชื่อรายการ
+  multiline?: boolean       // strings: แต่ละบรรทัดเป็นกล่องข้อความยาว
+  blank?: () => Record<string, unknown>
+}
+
+export interface Section {
+  key: string; label: string; group: string; help?: string
+  kind: 'object' | 'list'
+  fields: Field[]
+  titleKey?: string         // list: ฟิลด์ที่ใช้เป็นชื่อรายการ
+  fixed?: boolean           // list ที่เพิ่ม/ลบไม่ได้ (เช่น สินค้า — ผูกกับหน้ารายละเอียดและไอคอน)
+  blank?: () => Record<string, unknown>
+}
+
+const productOptions = (): [string, string][] => [['', 'ทั่วไป'], ...PRODUCTS.map(p => [p.slug, p.name] as [string, string])]
+const link = 'ลิงก์ภายในเว็บขึ้นต้นด้วย / เช่น /contact หรือลิงก์ภายนอกขึ้นต้นด้วย https://'
+
+export const SECTIONS: Section[] = [
+  {
+    key: 'HERO', label: 'Hero (สไลด์หน้าแรก)', group: 'หน้าแรก', kind: 'list', titleKey: 'title',
+    help: 'สไลด์ใหญ่บนสุดของหน้าแรก เลื่อนอัตโนมัติ ถ้าใส่ภาพ ภาพจะแสดงในกรอบด้านขวาแทนไอคอน',
+    blank: () => ({ tag: '', title: 'หัวข้อใหม่', lead: '', color: '#0E7C86', image: '', primaryLabel: 'ดูรายละเอียด', primaryTo: '/products', secondaryLabel: 'ขอใบเสนอราคา', secondaryTo: '/contact', chip1: '', chip2: '' }),
+    fields: [
+      { key: 'tag', label: 'ป้ายเล็กเหนือหัวข้อ', type: 'text' },
+      { key: 'title', label: 'หัวข้อ', type: 'text' },
+      { key: 'lead', label: 'คำอธิบายใต้หัวข้อ', type: 'textarea' },
+      { key: 'color', label: 'สีพื้นหลัง', type: 'color' },
+      { key: 'image', label: 'ภาพประกอบ', type: 'image', spec: 'hero' },
+      { key: 'primaryLabel', label: 'ปุ่มหลัก: ข้อความ', type: 'text' },
+      { key: 'primaryTo', label: 'ปุ่มหลัก: ลิงก์', type: 'text', help: link },
+      { key: 'secondaryLabel', label: 'ปุ่มรอง: ข้อความ', type: 'text' },
+      { key: 'secondaryTo', label: 'ปุ่มรอง: ลิงก์', type: 'text', help: link },
+      { key: 'chip1', label: 'ป้ายลอยบนภาพ 1', type: 'text' },
+      { key: 'chip2', label: 'ป้ายลอยบนภาพ 2', type: 'text' },
+    ],
+  },
+  {
+    key: 'VIDEOS', label: 'วิดีโอแนะนำระบบ', group: 'หน้าแรก', kind: 'list', titleKey: 'title',
+    help: 'ใส่ได้ 2 แบบ: อัปโหลดไฟล์วิดีโอ หรือใส่รหัส YouTube (ส่วนท้ายลิงก์ เช่น dQw4w9WgXcQ) ถ้าใส่ทั้งคู่ จะใช้ไฟล์ที่อัปโหลด',
+    blank: () => ({ title: 'วิดีโอใหม่', text: '', duration: '', product: '', youtubeId: '', file: '', thumb: '' }),
+    fields: [
+      { key: 'title', label: 'ชื่อวิดีโอ', type: 'text' },
+      { key: 'text', label: 'คำอธิบาย', type: 'textarea' },
+      { key: 'product', label: 'ระบบที่เกี่ยวข้อง', type: 'select', options: productOptions },
+      { key: 'duration', label: 'ความยาว (เช่น 5:12)', type: 'text' },
+      { key: 'file', label: 'ไฟล์วิดีโอ (MP4/WebM)', type: 'video' },
+      { key: 'thumb', label: 'ภาพปกวิดีโอ (ใช้กับไฟล์ที่อัปโหลด)', type: 'image', spec: 'thumb' },
+      { key: 'youtubeId', label: 'รหัส YouTube', type: 'text' },
+    ],
+  },
+  {
+    key: 'ADS', label: 'พื้นที่โฆษณา/โปรโมชัน', group: 'หน้าแรก', kind: 'list', titleKey: 'title',
+    help: 'แบนเนอร์ใหญ่กลางหน้า เลื่อนอัตโนมัติ ถ้าใส่ภาพ จะใช้ภาพเป็นพื้นหลังเต็มกรอบ (ควรเป็นภาพที่ตัวอักษรสีขาวอ่านออก)',
+    blank: () => ({ title: 'โปรโมชันใหม่', text: '', cta: 'ดูรายละเอียด', to: '/contact', color: '#0E7C86', image: '' }),
+    fields: [
+      { key: 'title', label: 'หัวข้อ', type: 'text' },
+      { key: 'text', label: 'รายละเอียด', type: 'textarea' },
+      { key: 'cta', label: 'ข้อความบนปุ่ม', type: 'text' },
+      { key: 'to', label: 'ลิงก์ของปุ่ม', type: 'text', help: link },
+      { key: 'color', label: 'สีพื้นหลัง (เมื่อไม่มีภาพ)', type: 'color' },
+      { key: 'image', label: 'ภาพพื้นหลัง', type: 'image', spec: 'ad' },
+    ],
+  },
+  {
+    key: 'COMPANY', label: 'Our Company', group: 'หน้าแรก', kind: 'object',
+    help: 'ส่วนแนะนำบริษัทในหน้าแรก และตัวเลขสถิติในหน้า "เกี่ยวกับเรา"',
+    fields: [
+      { key: 'heading', label: 'หัวข้อ', type: 'text' },
+      { key: 'text', label: 'ย่อหน้าแนะนำ', type: 'strings', multiline: true },
+      { key: 'image', label: 'ภาพบริษัท/ทีมงาน', type: 'image', spec: 'cover' },
+      { key: 'stats', label: 'ตัวเลขสถิติ', type: 'list', titleKey: 'label', blank: () => ({ n: '', label: '' }), fields: [{ key: 'n', label: 'ตัวเลข (เช่น 2,000+)', type: 'text' }, { key: 'label', label: 'คำอธิบาย', type: 'text' }] },
+    ],
+  },
+  {
+    key: 'CUSTOMERS', label: 'Our Customer', group: 'หน้าแรก', kind: 'list', titleKey: 'name',
+    help: 'ใส่โลโก้ลูกค้าได้ ถ้าไม่ใส่จะแสดงเป็นชื่อ',
+    blank: () => ({ name: 'ลูกค้าใหม่', logo: '', place: '', text: '', image: '', color: '#0E7C86' }),
+    fields: [
+      { key: 'name', label: 'ชื่อลูกค้า', type: 'text' },
+      { key: 'logo', label: 'โลโก้', type: 'image', spec: 'logo' },
+      { key: 'place', label: 'ที่ตั้ง (เช่น จ.นครปฐม)', type: 'text' },
+      { key: 'text', label: 'ข้อความแนะนำร้าน (แสดงในหน้า ลูกค้าของเรา)', type: 'textarea' },
+      { key: 'image', label: 'ภาพร้าน/โปสเตอร์', type: 'image', spec: 'cover' },
+      { key: 'color', label: 'สีพื้น (เมื่อไม่มีภาพ)', type: 'color' },
+    ],
+  },
+  {
+    key: 'EVENTS', label: 'กิจกรรม/สัมมนา', group: 'หน้าแรก', kind: 'list', titleKey: 'title',
+    blank: () => ({ title: 'กิจกรรมใหม่', date: new Date().toISOString().slice(0, 10), place: '', text: '', image: '', color: '#0E7C86' }),
+    fields: [
+      { key: 'title', label: 'ชื่อกิจกรรม', type: 'text' },
+      { key: 'date', label: 'วันที่ (ปี ค.ศ.-เดือน-วัน)', type: 'text', help: 'รูปแบบ 2569-11-14 (ปี พ.ศ.) ระบบแสดงเป็นวันที่ไทยให้' },
+      { key: 'place', label: 'สถานที่', type: 'text' },
+      { key: 'text', label: 'รายละเอียด', type: 'textarea' },
+      { key: 'image', label: 'ภาพ', type: 'image', spec: 'cover' },
+      { key: 'color', label: 'สีพื้น (เมื่อไม่มีภาพ)', type: 'color' },
+    ],
+  },
+  {
+    key: 'NEWS', label: 'ข่าวและสื่อ', group: 'หน้าแรก', kind: 'list', titleKey: 'title',
+    blank: () => ({ title: 'ข่าวใหม่', outlet: 'ข่าวประชาสัมพันธ์', date: '', text: '', image: '', color: '#0F1F3D' }),
+    fields: [
+      { key: 'title', label: 'หัวข้อข่าว', type: 'text' },
+      { key: 'outlet', label: 'แหล่งข่าว/สื่อ', type: 'text' },
+      { key: 'date', label: 'วันที่', type: 'text', help: 'รูปแบบ 2569-10-08 (ปี พ.ศ.-เดือน-วัน)' },
+      { key: 'text', label: 'รายละเอียด', type: 'textarea' },
+      { key: 'image', label: 'ภาพ', type: 'image', spec: 'cover' },
+      { key: 'color', label: 'สีพื้น (เมื่อไม่มีภาพ)', type: 'color' },
+    ],
+  },
+  {
+    key: 'HOME', label: 'หัวข้อแต่ละส่วนของหน้าแรก', group: 'หน้าแรก', kind: 'object',
+    fields: [
+      { key: 'programsTitle', label: 'ปุ่มโปรแกรม 4 ปุ่ม: หัวข้อ', type: 'text' },
+      { key: 'videosTitle', label: 'วิดีโอ: หัวข้อ', type: 'text' }, { key: 'videosText', label: 'วิดีโอ: คำอธิบาย', type: 'text' },
+      { key: 'companyTag', label: 'บริษัท: ป้ายหัวข้อ', type: 'text' },
+      { key: 'customersTitle', label: 'ลูกค้า: หัวข้อ', type: 'text' }, { key: 'customersText', label: 'ลูกค้า: คำอธิบาย', type: 'text' },
+      { key: 'eventsTitle', label: 'กิจกรรม: หัวข้อ', type: 'text' }, { key: 'eventsText', label: 'กิจกรรม: คำอธิบาย', type: 'text' },
+      { key: 'newsTitle', label: 'ข่าว: หัวข้อ', type: 'text' }, { key: 'newsText', label: 'ข่าว: คำอธิบาย', type: 'text' },
+      { key: 'contactTitle', label: 'ติดต่อ: หัวข้อ', type: 'text' }, { key: 'contactText', label: 'ติดต่อ: คำอธิบาย', type: 'textarea' },
+    ],
+  },
+  {
+    key: 'BRAND', label: 'ข้อมูลบริษัท/ติดต่อ', group: 'ทั่วทั้งเว็บ', kind: 'object',
+    help: 'ใช้ในแถบบน ส่วนท้าย หน้าติดต่อ และหน้าแรก',
+    fields: [
+      { key: 'name', label: 'ชื่อแบรนด์', type: 'text' }, { key: 'tagline', label: 'สโลแกน', type: 'text' },
+      { key: 'company', label: 'ชื่อบริษัท (ทางกฎหมาย)', type: 'text' }, { key: 'taxId', label: 'เลขประจำตัวผู้เสียภาษี', type: 'text' },
+      { key: 'address', label: 'ที่อยู่', type: 'textarea' },
+      { key: 'salesPhone', label: 'เบอร์ฝ่ายขาย', type: 'text' }, { key: 'servicePhone', label: 'เบอร์ฝ่ายบริการ', type: 'text' },
+      { key: 'email', label: 'อีเมล', type: 'text' }, { key: 'line', label: 'LINE ID', type: 'text' },
+      { key: 'hours', label: 'เวลาทำการ', type: 'text' },
+    ],
+  },
+  {
+    key: 'NAV', label: 'เมนูหลัก (Header)', group: 'ทั่วทั้งเว็บ', kind: 'list', titleKey: 'label',
+    help: 'ช่องลิงก์: ว่าง = หัวข้อที่กดไม่ได้ (เปิดเมนูย่อยอย่างเดียว) · /หน้า = ลิงก์ในเว็บ · https://… = เว็บอื่น (เปิดแท็บใหม่) · เมื่อบันทึกเมนูที่นี่ ชื่อสินค้าในเมนูจะไม่อัปเดตตามหมวด "สินค้า" อัตโนมัติ',
+    blank: () => ({ label: 'เมนูใหม่', to: '', children: [] }),
+    fields: [
+      { key: 'label', label: 'ชื่อเมนู', type: 'text' },
+      { key: 'to', label: 'ลิงก์ (เว้นว่างได้)', type: 'text', help: link },
+      { key: 'children', label: 'เมนูย่อย', type: 'list', titleKey: 'label', blank: () => ({ label: 'เมนูย่อยใหม่', to: '/', children: [] }), fields: [
+        { key: 'label', label: 'ชื่อ', type: 'text' },
+        { key: 'to', label: 'ลิงก์', type: 'text', help: link },
+        { key: 'children', label: 'เมนูชั้นที่ 3 (แตกออกด้านข้าง)', type: 'list', titleKey: 'label', blank: () => ({ label: 'รายการใหม่', to: '/' }), fields: [{ key: 'label', label: 'ชื่อ', type: 'text' }, { key: 'to', label: 'ลิงก์', type: 'text', help: link }] },
+      ] },
+    ],
+  },
+  {
+    key: 'SOCIAL', label: 'โซเชียล (แถบบนสุด)', group: 'ทั่วทั้งเว็บ', kind: 'list', titleKey: 'label',
+    blank: () => ({ label: 'ช่องทางใหม่', href: 'https://' }),
+    fields: [{ key: 'label', label: 'ชื่อที่แสดง', type: 'text' }, { key: 'href', label: 'ลิงก์', type: 'text', help: 'ต้องขึ้นต้นด้วย https://' }],
+  },
+  {
+    key: 'PRODUCTS', label: 'สินค้า', group: 'หน้าอื่นๆ', kind: 'list', titleKey: 'name', fixed: true,
+    help: 'แก้ข้อความของสินค้าที่มีอยู่ (เพิ่ม/ลบสินค้าและเปลี่ยนไอคอนต้องแก้โค้ดใน src/site.ts)',
+    fields: [
+      { key: 'name', label: 'ชื่อสินค้า', type: 'text' }, { key: 'short', label: 'ประโยคสั้น', type: 'text' },
+      { key: 'summary', label: 'สรุป', type: 'textarea' }, { key: 'forWho', label: 'เหมาะกับใคร', type: 'textarea' },
+      { key: 'color', label: 'สีประจำสินค้า', type: 'color' },
+      { key: 'features', label: 'จุดเด่น', type: 'strings' },
+      { key: 'modules', label: 'โมดูล', type: 'list', titleKey: 'title', blank: () => ({ title: '', text: '' }), fields: [{ key: 'title', label: 'ชื่อโมดูล', type: 'text' }, { key: 'text', label: 'รายละเอียด', type: 'textarea' }] },
+    ],
+  },
+  {
+    key: 'ARTICLES', label: 'บทความ/ศูนย์ความรู้', group: 'หน้าอื่นๆ', kind: 'list', titleKey: 'title',
+    blank: () => ({ slug: `article-${Date.now().toString(36)}`, title: 'บทความใหม่', category: 'ข่าวสาร', date: '', excerpt: '', body: [''] }),
+    fields: [
+      { key: 'title', label: 'ชื่อบทความ', type: 'text' },
+      { key: 'slug', label: 'ชื่อในลิงก์ (ภาษาอังกฤษ ตัวเล็ก ใช้ - คั่น)', type: 'text', help: 'เปลี่ยนแล้วลิงก์เดิมของบทความนี้จะใช้ไม่ได้' },
+      { key: 'category', label: 'หมวด', type: 'select', options: () => ['ERP', 'POS', 'ข่าวสาร'].map(c => [c, c] as [string, string]) },
+      { key: 'date', label: 'วันที่', type: 'text', help: 'รูปแบบ 2569-10-10 (ปี พ.ศ.-เดือน-วัน)' },
+      { key: 'excerpt', label: 'ข้อความย่อ', type: 'textarea' },
+      { key: 'body', label: 'เนื้อหา (แต่ละกล่อง = 1 ย่อหน้า)', type: 'strings', multiline: true },
+    ],
+  },
+  {
+    key: 'SERVICES', label: 'บริการหลังการขาย', group: 'หน้าอื่นๆ', kind: 'list', titleKey: 'title',
+    blank: () => ({ title: 'บริการใหม่', text: '' }),
+    fields: [{ key: 'title', label: 'ชื่อบริการ', type: 'text' }, { key: 'text', label: 'รายละเอียด', type: 'textarea' }],
+  },
+  {
+    key: 'COURSES', label: 'หลักสูตรอบรม', group: 'หน้าอื่นๆ', kind: 'list', titleKey: 'title',
+    blank: () => ({ id: `course-${Date.now().toString(36)}`, title: 'หลักสูตรใหม่', level: 'พื้นฐาน', hours: 4, price: 'ฟรี', topics: [''] }),
+    fields: [
+      { key: 'title', label: 'ชื่อหลักสูตร', type: 'text' }, { key: 'id', label: 'รหัสหลักสูตร', type: 'text' },
+      { key: 'level', label: 'ระดับ', type: 'text' }, { key: 'hours', label: 'จำนวนชั่วโมง', type: 'number' },
+      { key: 'price', label: 'ราคา', type: 'text' }, { key: 'topics', label: 'หัวข้อที่เรียน', type: 'strings' },
+    ],
+  },
+]
