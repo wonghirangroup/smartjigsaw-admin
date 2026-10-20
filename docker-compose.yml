@@ -1,0 +1,21 @@
+services:
+  admin:
+    build:
+      context: .
+      args:
+        VITE_SITE_URL: ${VITE_SITE_URL:-}
+    restart: unless-stopped
+    environment:
+      - PORT=3001
+      - TRUST_PROXY=1
+      - COOKIE_SECURE=1
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-}
+      - PUBLIC_ORIGINS=${PUBLIC_ORIGINS:-}
+    # เปิดเฉพาะ localhost ของ VPS — ให้ Nginx/Cloudflare Tunnel ชี้เข้ามา (พอร์ต 3002 เลี่ยงชนกับระบบอื่นที่ใช้ 3000/8081-8083)
+    ports:
+      - "127.0.0.1:3002:3001"
+    volumes:
+      - admin_data:/data
+
+volumes:
+  admin_data:
