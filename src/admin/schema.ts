@@ -167,6 +167,7 @@ export const SECTIONS: Section[] = [
       { key: 'fontBody', label: 'ฟอนต์เนื้อความ', type: 'select', options: () => FONT_CHOICES.map(f => [f, f] as [string, string]) },
       { key: 'buttonShape', label: 'รูปทรงปุ่ม', type: 'select', options: () => [['rounded', 'มุมโค้ง'], ['pill', 'ทรงแคปซูล (โค้งเต็ม)']] },
       { key: 'heroStyle', label: 'รูปแบบ Hero หน้าแรก', type: 'select', options: () => [['split', 'ข้อความซ้าย + ภาพ/กล่องขวา'], ['banner', 'แบนเนอร์เต็มจอ ข้อความชิดล่างซ้าย']], help: 'แบบแบนเนอร์เหมาะกับธีมเข้ม — ใส่ภาพพื้นหลังเต็มจอของแต่ละสไลด์ได้ในหมวด Hero' },
+      { key: 'bodyWeight', label: 'น้ำหนักตัวอักษรเนื้อความ', type: 'range', min: 400, max: 600, step: 100, help: '400 = ปกติ · 500 = หนาปานกลาง (แนะนำสำหรับธีมเข้ม) · 600 = หนา' },
       { key: 'textScale', label: 'ขนาดตัวอักษรทั้งเว็บ', type: 'range', min: 80, max: 130, step: 5, unit: '%' },
       { key: 'headScale', label: 'ขนาดหัวข้อเพิ่มเติม', type: 'range', min: 70, max: 140, step: 5, unit: '%', help: 'ปรับเฉพาะหัวข้อใหญ่ (Hero หัวส่วน หัวหน้าย่อย) เพิ่มจากขนาดตัวอักษรทั้งเว็บ' },
       { key: 'radius', label: 'ความโค้งมุมการ์ดและปุ่ม', type: 'range', min: 0, max: 28, step: 1, unit: 'px' },

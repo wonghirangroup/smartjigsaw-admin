@@ -36,7 +36,7 @@ export const PRODUCTS: Product[] = [
     modules: [{ title: 'ทำความเข้าใจธุรกิจ', text: 'ดูกระบวนการทำงานและพฤติกรรมจริงของผู้ใช้งาน' }, { title: 'วางแผนกลยุทธ์', text: 'กำหนดเป้าหมายและลำดับการเปลี่ยนผ่านสู่ดิจิทัล' }, { title: 'ออกแบบโครงสร้างระบบ', text: 'วางผังระบบให้เรียบง่าย ใช้งานง่าย' }, { title: 'ลงมือทดสอบหน้างาน', text: 'ทดสอบร่วมกับบุคลากร แก้ประเด็นติดขัดและดูแลต่อเนื่อง' }],
   },
   {
-    slug: 'erp-pos', name: 'พัฒนาระบบ ERP & POS', short: 'ระบบบริหารธุรกิจ พร้อมระบบขายหน้าร้าน', icon: ShoppingCart, color: '#0B1E36',
+    slug: 'erp-pos', name: 'พัฒนาระบบ ERP & POS', short: 'ระบบบริหารธุรกิจ พร้อมระบบขายหน้าร้าน', icon: ShoppingCart, color: '#1a3a8f',
     summary: 'ระบบบริหารธุรกิจที่ออกแบบเฉพาะสำหรับแต่ละองค์กร พร้อมระบบขายหน้าร้าน จัดการรับออเดอร์และคุมสต็อกได้ในระบบเดียวกัน',
     forWho: 'ธุรกิจค้าปลีกและองค์กรที่ต้องการให้ยอดขาย สต็อก และการเบิกจ่าย อยู่ในระบบเดียว',
     features: ['แบ่งหน่วยของสินค้าได้ เช่น ซื้อเป็นลัง ขายแยกชิ้น ตัดสต็อกและคำนวณต้นทุนแม่นยำ', 'Dashboard ติดตามยอดขาย รายจ่าย ต้นทุน และยอดสุทธิแบบเรียลไทม์ ผ่านมือถือ', 'รองรับ Cashless Payment และ QR PromptPay', 'ส่งออกรายงานภาษีและบัญชีอัตโนมัติ'],
@@ -133,7 +133,7 @@ export interface HeroSlide {
 }
 export const HERO: HeroSlide[] = [
   { tag: 'ที่ปรึกษาด้านธุรกิจ', title: 'เปลี่ยนผ่านสู่ยุคดิจิทัลอย่างมั่นใจ ด้วยแผนที่เหมาะกับธุรกิจคุณ', lead: 'วางแผนกลยุทธ์และโครงสร้างระบบธุรกิจ ผสมผสานคน กระบวนการ และเทคโนโลยี', color: '#1369D5', primaryLabel: 'เรียนรู้เพิ่มเติม', primaryTo: '/products/consulting', secondaryLabel: 'ติดต่อเรา', secondaryTo: '/contact', chip1: 'กลยุทธ์', chip2: 'โครงสร้างระบบ' },
-  { tag: 'ERP & POS', title: 'ขายหน้าร้านและคุมสต็อกได้ในระบบเดียว', lead: 'ระบบบริหารธุรกิจที่ออกแบบเฉพาะสำหรับแต่ละองค์กร พร้อมระบบขายหน้าร้าน', color: '#0B1E36', primaryLabel: 'เรียนรู้เพิ่มเติม', primaryTo: '/products/erp-pos', secondaryLabel: 'ติดต่อเรา', secondaryTo: '/contact', chip1: 'QR PromptPay', chip2: 'Dashboard' },
+  { tag: 'ERP & POS', title: 'ขายหน้าร้านและคุมสต็อกได้ในระบบเดียว', lead: 'ระบบบริหารธุรกิจที่ออกแบบเฉพาะสำหรับแต่ละองค์กร พร้อมระบบขายหน้าร้าน', color: '#1a3a8f', primaryLabel: 'เรียนรู้เพิ่มเติม', primaryTo: '/products/erp-pos', secondaryLabel: 'ติดต่อเรา', secondaryTo: '/contact', chip1: 'QR PromptPay', chip2: 'Dashboard' },
   { tag: 'AI Agent & Automation', title: 'ให้ AI ช่วยเพิ่มประสิทธิภาพ ลดต้นทุน และเพิ่มความเร็ว', lead: 'นำ AI มาช่วยงานซ้ำๆ และวิเคราะห์ข้อมูลเพื่อเสนอแนวทางการขาย', color: '#0F4C9A', primaryLabel: 'เรียนรู้เพิ่มเติม', primaryTo: '/products/ai-agent', secondaryLabel: 'ติดต่อเรา', secondaryTo: '/contact', chip1: 'AI Agent', chip2: 'Automation' },
   { tag: 'ซอฟต์แวร์เฉพาะทาง', title: 'ระบบที่สร้างตามกระบวนการของคุณโดยเฉพาะ', lead: 'พัฒนาบนมาตรฐานสากล เน้นระบบโมดูลาร์ที่ขยายต่อได้', color: '#2A6FD6', primaryLabel: 'เรียนรู้เพิ่มเติม', primaryTo: '/products/custom-software', secondaryLabel: 'ติดต่อเรา', secondaryTo: '/contact', chip1: 'โมดูลาร์', chip2: 'มาตรฐานสากล' },
 ]
@@ -159,6 +159,7 @@ export const THEME = {
   buttonShape: 'rounded' as 'rounded' | 'pill', // ปุ่มมุมโค้ง หรือทรงแคปซูล
   heroStyle: 'split' as 'split' | 'banner',      // Hero แบบข้อความ+ภาพข้าง หรือแบบแบนเนอร์เต็มจอ ข้อความชิดล่างซ้าย
   fontHead: 'Kanit', fontBody: 'Kanit',
+  bodyWeight: 400,   // น้ำหนักตัวอักษรเนื้อความ 400/500/600 (ธีมเข้มควรใช้ 500 ขึ้นไปให้อ่านชัด)
   textScale: 100,    // % ขนาดตัวอักษรทั้งเว็บ (80–130)
   headScale: 100,    // % ขนาดหัวข้อเพิ่มเติม (70–140)
   radius: 14,        // px ความโค้งของการ์ด/ปุ่ม (0–28)
@@ -198,11 +199,20 @@ export function applyTheme(t: Partial<typeof THEME> = THEME) {
   const rad = clampNum(t.radius, 0, 28, 14)
   st.setProperty('--btn-radius', t.buttonShape === 'pill' ? '999px' : `${Math.round(rad * 0.8)}px`)
   document.documentElement.dataset.hero = t.heroStyle === 'banner' ? 'banner' : 'split'
-  // ธีมเข้ม: เส้นขอบเป็นเส้นสว่างจาง และกลับสีโลโก้ (โลโก้เป็นสีเข้ม) ให้เห็นบนพื้นเข้ม
+  // กลับสีโลโก้ (โลโก้เป็นสีเข้ม) ให้เห็นบนพื้นเข้ม
   const lumOf = (h: string) => { const c = [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16) / 255).map(v => (v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4)); return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2] }
   const dark = lumOf(surface) < 0.25
   st.setProperty('--logo-filter', dark ? 'brightness(0) invert(1)' : 'none')
-  if (dark) st.setProperty('--line', 'color-mix(in srgb, #ffffff 14%, var(--surface))'); else st.removeProperty('--line')
+  // ธีมเข้ม: เส้นขอบสว่างชัดขึ้น · แถบ/หัวหน้าย่อยเป็นไล่เฉดน้ำเงินสว่างกว่าพื้น · ท้ายเว็บมีเส้นสีเน้นด้านบน · การ์ดมีเงา — กันทุกอย่างกลืนเป็นสีเดียวกัน
+  if (dark) {
+    st.setProperty('--line', 'color-mix(in srgb, #ffffff 24%, var(--surface))')
+    st.setProperty('--band-bg', 'linear-gradient(120deg, color-mix(in srgb, #4f6bd6 45%, var(--surface)), color-mix(in srgb, #4f6bd6 75%, var(--surface)))')
+    st.setProperty('--footer-border', '4px solid var(--accent)')
+    st.setProperty('--card-shadow', '0 10px 28px rgba(0, 0, 0, 0.35)')
+  } else {
+    ;['--line', '--band-bg', '--footer-border', '--card-shadow'].forEach(k => st.removeProperty(k))
+  }
+  st.setProperty('--body-weight', String([400, 500, 600].includes(Number(t.bodyWeight)) ? Number(t.bodyWeight) : 400))
   const fh = okFont(t.fontHead, D.fontHead), fb = okFont(t.fontBody, D.fontBody)
   loadFont(fh); loadFont(fb)
   st.setProperty('--font-head', `'${fh}', 'Noto Sans Thai', system-ui, sans-serif`)

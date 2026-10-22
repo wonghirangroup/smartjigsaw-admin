@@ -199,10 +199,10 @@ function ListEditor({ fields, titleKey, blank, value, onChange, toast, fixed, ne
 }
 
 // ---------- ชุดสีสำเร็จรูป + ตรวจคอนทราสต์ (หมวดธีม) ----------
-const LIGHT = { surface: '#ffffff', onPrimary: '#ffffff', buttonShape: 'rounded', heroStyle: 'split' }
+const LIGHT = { surface: '#ffffff', onPrimary: '#ffffff', buttonShape: 'rounded', heroStyle: 'split', bodyWeight: 400, textScale: 100, headScale: 100 }
 const PRESETS: { name: string; v: Record<string, string | number> }[] = [
   { name: 'Smart Jigsaw (เริ่มต้น)', v: { ...LIGHT, primary: '#1369d5', primaryInk: '#0d52ad', accent: '#e0641f', ink: '#0b1e36', ink2: '#44546f', ground: '#f5f7fa', text: '#0b1e36', fontHead: 'Kanit', fontBody: 'Kanit', radius: 14 } },
-  { name: 'Digital Navy (กรมท่าเข้ม + ส้ม)', v: { primary: '#ff931e', primaryInk: '#ffb15c', accent: '#ff931e', ink: '#0c1224', ink2: '#c3cadf', ground: '#101830', surface: '#1a2754', text: '#ffffff', onPrimary: '#101830', buttonShape: 'pill', heroStyle: 'banner', fontHead: 'Noto Sans Thai', fontBody: 'Noto Sans Thai', radius: 22 } },
+  { name: 'Digital Navy (กรมท่าเข้ม + ส้ม)', v: { primary: '#ff9f2e', primaryInk: '#ffc27a', accent: '#ff9f2e', ink: '#070b1c', ink2: '#d5dcf2', ground: '#0c1330', surface: '#20306f', text: '#ffffff', onPrimary: '#0c1330', buttonShape: 'pill', heroStyle: 'banner', fontHead: 'Prompt', fontBody: 'Noto Sans Thai', bodyWeight: 500, textScale: 105, headScale: 105, radius: 22 } },
   { name: 'เขียวน้ำเงิน', v: { ...LIGHT, primary: '#0e7c86', primaryInk: '#0a5d65', accent: '#e0641f', ink: '#0f1f3d', ink2: '#44546f', ground: '#f5f7fa', text: '#0f1f3d' } },
   { name: 'ม่วงอบอุ่น', v: { ...LIGHT, primary: '#7a4dcb', primaryInk: '#5b35a0', accent: '#d97706', ink: '#1f1235', ink2: '#4b4560', ground: '#f7f5fb', text: '#1f1235' } },
   { name: 'ส้มสดใส', v: { ...LIGHT, primary: '#d4560f', primaryInk: '#a8420a', accent: '#1369d5', ink: '#2a1608', ink2: '#5c4636', ground: '#fbf7f3', text: '#2a1608' } },
