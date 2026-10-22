@@ -153,6 +153,11 @@ export const HOME = {
 export const FONT_CHOICES = ['Kanit', 'Prompt', 'Sarabun', 'Noto Sans Thai', 'IBM Plex Sans Thai', 'Mitr', 'Athiti', 'Mali', 'Pridi', 'Chonburi'] as const
 export const THEME = {
   primary: '#1369d5', primaryInk: '#0d52ad', accent: '#e0641f', ink: '#0b1e36', ink2: '#44546f', ground: '#f5f7fa',
+  surface: '#ffffff',   // พื้นการ์ด/แถบเมนู/ช่องกรอก (ธีมเข้ม = กรมท่าอ่อน)
+  text: '#0b1e36',      // สีตัวอักษรเนื้อความ (ธีมเข้ม = ขาว)
+  onPrimary: '#ffffff', // สีตัวอักษรบนปุ่มสีหลัก/สีเน้น (สีส้มสว่างควรใช้ตัวอักษรกรมท่า)
+  buttonShape: 'rounded' as 'rounded' | 'pill', // ปุ่มมุมโค้ง หรือทรงแคปซูล
+  heroStyle: 'split' as 'split' | 'banner',      // Hero แบบข้อความ+ภาพข้าง หรือแบบแบนเนอร์เต็มจอ ข้อความชิดล่างซ้าย
   fontHead: 'Kanit', fontBody: 'Kanit',
   textScale: 100,    // % ขนาดตัวอักษรทั้งเว็บ (80–130)
   headScale: 100,    // % ขนาดหัวข้อเพิ่มเติม (70–140)
@@ -185,6 +190,19 @@ export function applyTheme(t: Partial<typeof THEME> = THEME) {
   st.setProperty('--ink', okColor(t.ink, D.ink))
   st.setProperty('--ink-2', okColor(t.ink2, D.ink2))
   st.setProperty('--ground', okColor(t.ground, D.ground))
+  const surface = okColor(t.surface, '#ffffff')
+  st.setProperty('--surface', surface)
+  st.setProperty('--card', surface)
+  st.setProperty('--text', okColor(t.text, D.ink))
+  st.setProperty('--on-primary', okColor(t.onPrimary, '#ffffff'))
+  const rad = clampNum(t.radius, 0, 28, 14)
+  st.setProperty('--btn-radius', t.buttonShape === 'pill' ? '999px' : `${Math.round(rad * 0.8)}px`)
+  document.documentElement.dataset.hero = t.heroStyle === 'banner' ? 'banner' : 'split'
+  // ธีมเข้ม: เส้นขอบเป็นเส้นสว่างจาง และกลับสีโลโก้ (โลโก้เป็นสีเข้ม) ให้เห็นบนพื้นเข้ม
+  const lumOf = (h: string) => { const c = [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16) / 255).map(v => (v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4)); return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2] }
+  const dark = lumOf(surface) < 0.25
+  st.setProperty('--logo-filter', dark ? 'brightness(0) invert(1)' : 'none')
+  if (dark) st.setProperty('--line', 'color-mix(in srgb, #ffffff 14%, var(--surface))'); else st.removeProperty('--line')
   const fh = okFont(t.fontHead, D.fontHead), fb = okFont(t.fontBody, D.fontBody)
   loadFont(fh); loadFont(fb)
   st.setProperty('--font-head', `'${fh}', 'Noto Sans Thai', system-ui, sans-serif`)

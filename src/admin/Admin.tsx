@@ -199,11 +199,13 @@ function ListEditor({ fields, titleKey, blank, value, onChange, toast, fixed, ne
 }
 
 // ---------- ชุดสีสำเร็จรูป + ตรวจคอนทราสต์ (หมวดธีม) ----------
-const PRESETS: { name: string; v: Record<string, string> }[] = [
-  { name: 'Smart Jigsaw (เริ่มต้น)', v: { primary: '#1369d5', primaryInk: '#0d52ad', accent: '#e0641f', ink: '#0b1e36', ink2: '#44546f', ground: '#f5f7fa' } },
-  { name: 'เขียวน้ำเงิน', v: { primary: '#0e7c86', primaryInk: '#0a5d65', accent: '#e0641f', ink: '#0f1f3d', ink2: '#44546f', ground: '#f5f7fa' } },
-  { name: 'ม่วงอบอุ่น', v: { primary: '#7a4dcb', primaryInk: '#5b35a0', accent: '#d97706', ink: '#1f1235', ink2: '#4b4560', ground: '#f7f5fb' } },
-  { name: 'ส้มสดใส', v: { primary: '#d4560f', primaryInk: '#a8420a', accent: '#1369d5', ink: '#2a1608', ink2: '#5c4636', ground: '#fbf7f3' } },
+const LIGHT = { surface: '#ffffff', onPrimary: '#ffffff', buttonShape: 'rounded', heroStyle: 'split' }
+const PRESETS: { name: string; v: Record<string, string | number> }[] = [
+  { name: 'Smart Jigsaw (เริ่มต้น)', v: { ...LIGHT, primary: '#1369d5', primaryInk: '#0d52ad', accent: '#e0641f', ink: '#0b1e36', ink2: '#44546f', ground: '#f5f7fa', text: '#0b1e36', fontHead: 'Kanit', fontBody: 'Kanit', radius: 14 } },
+  { name: 'Digital Navy (กรมท่าเข้ม + ส้ม)', v: { primary: '#ff931e', primaryInk: '#ffb15c', accent: '#ff931e', ink: '#0c1224', ink2: '#c3cadf', ground: '#101830', surface: '#1a2754', text: '#ffffff', onPrimary: '#101830', buttonShape: 'pill', heroStyle: 'banner', fontHead: 'Noto Sans Thai', fontBody: 'Noto Sans Thai', radius: 22 } },
+  { name: 'เขียวน้ำเงิน', v: { ...LIGHT, primary: '#0e7c86', primaryInk: '#0a5d65', accent: '#e0641f', ink: '#0f1f3d', ink2: '#44546f', ground: '#f5f7fa', text: '#0f1f3d' } },
+  { name: 'ม่วงอบอุ่น', v: { ...LIGHT, primary: '#7a4dcb', primaryInk: '#5b35a0', accent: '#d97706', ink: '#1f1235', ink2: '#4b4560', ground: '#f7f5fb', text: '#1f1235' } },
+  { name: 'ส้มสดใส', v: { ...LIGHT, primary: '#d4560f', primaryInk: '#a8420a', accent: '#1369d5', ink: '#2a1608', ink2: '#5c4636', ground: '#fbf7f3', text: '#2a1608' } },
 ]
 const lum = (hex: string) => {
   const c = [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16) / 255).map(v => (v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4))
@@ -214,10 +216,12 @@ const isHex = (v: unknown): v is string => typeof v === 'string' && /^#[0-9a-f]{
 
 function ThemeExtras({ value, onChange }: { value: Json; onChange: (v: Json) => void }) {
   const checks: [string, string, string][] = [
-    ['ตัวอักษรขาวบนปุ่มสีหลัก', '#ffffff', value?.primary],
-    ['ตัวอักษรขาวบนปุ่มสีเน้น', '#ffffff', value?.accent],
-    ['ตัวอักษรหลักบนพื้นหลังเว็บ', value?.ink, value?.ground],
-    ['ข้อความรองบนพื้นขาว', value?.ink2, '#ffffff'],
+    ['ตัวอักษรบนปุ่มสีหลัก', value?.onPrimary, value?.primary],
+    ['ตัวอักษรบนปุ่มสีเน้น', value?.onPrimary, value?.accent],
+    ['ตัวอักษรเนื้อความบนพื้นหลังเว็บ', value?.text, value?.ground],
+    ['ตัวอักษรเนื้อความบนการ์ด', value?.text, value?.surface],
+    ['ข้อความรองบนการ์ด', value?.ink2, value?.surface],
+    ['สีหลักเมื่อเป็นลิงก์บนพื้นหลังเว็บ', value?.primaryInk, value?.ground],
   ]
   return (
     <div className="a-card a-stack" style={{ marginTop: 16 }}>
