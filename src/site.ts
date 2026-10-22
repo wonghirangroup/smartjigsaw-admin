@@ -128,6 +128,7 @@ export const NEWS: NewsItem[] = []
 // สไลด์ Hero หน้าแรก — image (ไม่บังคับ) จะแสดงเป็นภาพพื้นหลัง/ภาพประกอบแทนไอคอน
 export interface HeroSlide {
   tag: string; title: string; lead: string; color: string; image?: string
+  imageMobile?: string // โหมดโปสเตอร์: ภาพสำหรับมือถือ (ถ้าไม่ใส่ ใช้ภาพหลักย่อลง)
   primaryLabel: string; primaryTo: string; secondaryLabel: string; secondaryTo: string
   chip1: string; chip2: string
 }
@@ -157,7 +158,7 @@ export const THEME = {
   text: '#0b1e36',      // สีตัวอักษรเนื้อความ (ธีมเข้ม = ขาว)
   onPrimary: '#ffffff', // สีตัวอักษรบนปุ่มสีหลัก/สีเน้น (สีส้มสว่างควรใช้ตัวอักษรกรมท่า)
   buttonShape: 'rounded' as 'rounded' | 'pill', // ปุ่มมุมโค้ง หรือทรงแคปซูล
-  heroStyle: 'split' as 'split' | 'banner',      // Hero แบบข้อความ+ภาพข้าง หรือแบบแบนเนอร์เต็มจอ ข้อความชิดล่างซ้าย
+  heroStyle: 'split' as 'split' | 'banner' | 'poster',      // Hero แบบข้อความ+ภาพข้าง หรือแบบแบนเนอร์เต็มจอ ข้อความชิดล่างซ้าย
   fontHead: 'Kanit', fontBody: 'Kanit',
   bodyWeight: 400,   // น้ำหนักตัวอักษรเนื้อความ 400/500/600 (ธีมเข้มควรใช้ 500 ขึ้นไปให้อ่านชัด)
   textScale: 100,    // % ขนาดตัวอักษรทั้งเว็บ (80–130)
@@ -198,7 +199,7 @@ export function applyTheme(t: Partial<typeof THEME> = THEME) {
   st.setProperty('--on-primary', okColor(t.onPrimary, '#ffffff'))
   const rad = clampNum(t.radius, 0, 28, 14)
   st.setProperty('--btn-radius', t.buttonShape === 'pill' ? '999px' : `${Math.round(rad * 0.8)}px`)
-  document.documentElement.dataset.hero = t.heroStyle === 'banner' ? 'banner' : 'split'
+  document.documentElement.dataset.hero = t.heroStyle === 'banner' || t.heroStyle === 'poster' ? t.heroStyle : 'split'
   // กลับสีโลโก้ (โลโก้เป็นสีเข้ม) ให้เห็นบนพื้นเข้ม
   const lumOf = (h: string) => { const c = [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16) / 255).map(v => (v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4)); return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2] }
   const dark = lumOf(surface) < 0.25

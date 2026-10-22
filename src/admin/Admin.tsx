@@ -64,7 +64,8 @@ function Picker({ kind, onPick, onClose }: { kind: 'image' | 'video'; onPick: (u
 // ---------- ฟิลด์ไฟล์ (รูป/วิดีโอ) ----------
 function FileField({ kind, spec, value, onChange, toast }: { kind: 'image' | 'video'; spec?: string; value: string; onChange: (v: string) => void; toast: (t: string, bad?: boolean) => void }) {
   // ช่อง Hero: ขนาดที่แนะนำเปลี่ยนตามรูปแบบ Hero ที่เลือกในธีม (แบนเนอร์เต็มจอ ใช้สัดส่วนกว้าง)
-  const key = spec === 'hero' && (EDITABLE.THEME as { heroStyle?: string } | undefined)?.heroStyle === 'banner' ? 'heroBanner' : spec
+  const hs = (EDITABLE.THEME as { heroStyle?: string } | undefined)?.heroStyle
+  const key = spec === 'hero' ? (hs === 'banner' ? 'heroBanner' : hs === 'poster' ? 'heroPoster' : 'hero') : spec
   const sp = key ? IMAGE_SPECS[key] : undefined
   const [busy, setBusy] = useState(false)
   const [pick, setPick] = useState(false)
