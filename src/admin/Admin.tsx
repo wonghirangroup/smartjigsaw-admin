@@ -111,6 +111,11 @@ function FieldEditor({ f, value, onChange, toast }: { f: Field; value: Json; onC
   let control: ReactNode
   switch (f.type) {
     case 'textarea': control = <textarea id={id} rows={3} value={value ?? ''} onChange={e => onChange(e.target.value)} />; break
+    case 'range': control = (
+      <div className="a-row">
+        <input id={id} type="range" min={f.min} max={f.max} step={f.step ?? 1} value={value ?? f.min} onChange={e => onChange(Number(e.target.value))} style={{ flex: 1, padding: 0 }} />
+        <b className="a-size" style={{ minWidth: 64, textAlign: 'right' }}>{value ?? f.min}{f.unit}</b>
+      </div>); break
     case 'number': control = <input id={id} type="number" min={0} value={value ?? 0} onChange={e => onChange(Number(e.target.value))} />; break
     case 'color': control = (
       <div className="a-row">
@@ -193,6 +198,45 @@ function ListEditor({ fields, titleKey, blank, value, onChange, toast, fixed, ne
   )
 }
 
+// ---------- ชุดสีสำเร็จรูป + ตรวจคอนทราสต์ (หมวดธีม) ----------
+const PRESETS: { name: string; v: Record<string, string> }[] = [
+  { name: 'Smart Jigsaw (เริ่มต้น)', v: { primary: '#1369d5', primaryInk: '#0d52ad', accent: '#e0641f', ink: '#0b1e36', ink2: '#44546f', ground: '#f5f7fa' } },
+  { name: 'เขียวน้ำเงิน', v: { primary: '#0e7c86', primaryInk: '#0a5d65', accent: '#e0641f', ink: '#0f1f3d', ink2: '#44546f', ground: '#f5f7fa' } },
+  { name: 'ม่วงอบอุ่น', v: { primary: '#7a4dcb', primaryInk: '#5b35a0', accent: '#d97706', ink: '#1f1235', ink2: '#4b4560', ground: '#f7f5fb' } },
+  { name: 'ส้มสดใส', v: { primary: '#d4560f', primaryInk: '#a8420a', accent: '#1369d5', ink: '#2a1608', ink2: '#5c4636', ground: '#fbf7f3' } },
+]
+const lum = (hex: string) => {
+  const c = [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16) / 255).map(v => (v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4))
+  return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]
+}
+const contrast = (a: string, b: string) => { const [x, y] = [lum(a), lum(b)].sort((p, q) => q - p); return (x + 0.05) / (y + 0.05) }
+const isHex = (v: unknown): v is string => typeof v === 'string' && /^#[0-9a-f]{6}$/i.test(v)
+
+function ThemeExtras({ value, onChange }: { value: Json; onChange: (v: Json) => void }) {
+  const checks: [string, string, string][] = [
+    ['ตัวอักษรขาวบนปุ่มสีหลัก', '#ffffff', value?.primary],
+    ['ตัวอักษรขาวบนปุ่มสีเน้น', '#ffffff', value?.accent],
+    ['ตัวอักษรหลักบนพื้นหลังเว็บ', value?.ink, value?.ground],
+    ['ข้อความรองบนพื้นขาว', value?.ink2, '#ffffff'],
+  ]
+  return (
+    <div className="a-card a-stack" style={{ marginTop: 16 }}>
+      <b>ชุดสีสำเร็จรูป</b>
+      <div className="a-row wrap">
+        {PRESETS.map(p => <button key={p.name} type="button" className="a-btn" onClick={() => onChange({ ...value, ...p.v })}>{p.name}</button>)}
+      </div>
+      <b>ตรวจความอ่านง่าย (ควรได้ 4.5 ขึ้นไป)</b>
+      <ul style={{ margin: 0, paddingLeft: 18 }}>
+        {checks.map(([label, fg, bg]) => {
+          if (!isHex(fg) || !isHex(bg)) return null
+          const r = contrast(fg, bg)
+          return <li key={label} style={{ color: r >= 4.5 ? 'inherit' : '#b42318' }}>{label}: <b>{r.toFixed(1)}</b> {r >= 4.5 ? '✓ ผ่าน' : '⚠ อ่านยาก ลองปรับสีให้ต่างกันมากขึ้น'}</li>
+        })}
+      </ul>
+    </div>
+  )
+}
+
 // ---------- แก้เนื้อหาหนึ่งหมวด ----------
 const liveValue = (s: Section) => {
   const v = clone(EDITABLE[s.key])
@@ -253,6 +297,7 @@ function SectionEditor({ section, toast, onDraft, focus }: { section: Section; t
           ? <ObjectFields fields={section.fields} value={value} onChange={change} toast={toast} />
           : <ListEditor fields={section.fields} titleKey={section.titleKey} blank={section.blank} value={value} onChange={change} toast={toast} fixed={section.fixed} focus={focus} />}
       </div>
+      {section.key === 'THEME' && <ThemeExtras value={value} onChange={change} />}
     </section>
   )
 }
@@ -484,6 +529,7 @@ export default function Admin() {
         <nav aria-label="เครื่องมือ">
           <div className="a-group">เครื่องมือ</div>
           <button aria-current={tab === '_guide'} onClick={() => setTab('_guide')}>คู่มือขนาดภาพ</button>
+          <a className="a-link" href="/design-system.pdf" target="_blank" rel="noopener" style={{ padding: '8px 10px' }}>📄 Wireframe &amp; Design System (PDF)</a>
           <button aria-current={tab === '_media'} onClick={() => setTab('_media')}>คลังสื่อ (รูป/วิดีโอ)</button>
           <button aria-current={tab === '_msgs'} onClick={() => setTab('_msgs')}><Mail size={14} /> ข้อความติดต่อ</button>
           <button aria-current={tab === '_pw'} onClick={() => setTab('_pw')}>เปลี่ยนรหัสผ่าน</button>

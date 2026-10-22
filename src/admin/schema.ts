@@ -1,8 +1,8 @@
 // โครงสร้างฟอร์มของหน้าแอดมิน — หนึ่ง Section ต่อหนึ่งคีย์ใน EDITABLE (src/site.ts)
 // เพิ่มข้อมูลใหม่: เพิ่มคีย์ใน site.ts + server/index.mjs (KEYS) แล้วประกาศ Section ที่นี่
-import { PRODUCTS } from '../site'
+import { FONT_CHOICES, PRODUCTS } from '../site'
 
-export type FieldType = 'text' | 'textarea' | 'number' | 'color' | 'date' | 'select' | 'image' | 'video' | 'strings' | 'list'
+export type FieldType = 'text' | 'textarea' | 'number' | 'range' | 'color' | 'date' | 'select' | 'image' | 'video' | 'strings' | 'list'
 
 // ขนาดภาพที่ฝ่ายออกแบบต้องทำ (px) — คำนวณจากกรอบจริงบนเว็บ x2 สำหรับจอ Retina
 // ถ้าเปลี่ยน layout ใน styles.css ต้องทบทวนตารางนี้และไฟล์ docs/IMAGE-SPECS.md
@@ -24,6 +24,7 @@ export const FILE_RULES = 'ไฟล์รูปไม่เกิน 8MB (แ�
 
 export interface Field {
   key: string; label: string; type: FieldType; help?: string
+  min?: number; max?: number; step?: number; unit?: string  // range: ช่วงค่า/หน่วยที่แสดง
   spec?: keyof typeof IMAGE_SPECS  // image: ขนาดที่แนะนำ (แสดงใต้ช่อง + เตือนเมื่อภาพเล็กไป)
   options?: () => [string, string][]
   fields?: Field[]          // list: ฟิลด์ย่อยของแต่ละรายการ
@@ -147,6 +148,25 @@ export const SECTIONS: Section[] = [
       { key: 'eventsTitle', label: 'กิจกรรม: หัวข้อ', type: 'text' }, { key: 'eventsText', label: 'กิจกรรม: คำอธิบาย', type: 'text' },
       { key: 'newsTitle', label: 'ข่าว: หัวข้อ', type: 'text' }, { key: 'newsText', label: 'ข่าว: คำอธิบาย', type: 'text' },
       { key: 'contactTitle', label: 'ติดต่อ: หัวข้อ', type: 'text' }, { key: 'contactText', label: 'ติดต่อ: คำอธิบาย', type: 'textarea' },
+    ],
+  },
+  {
+    key: 'THEME', label: 'ธีม: สี ฟอนต์ ขนาด', group: 'ทั่วทั้งเว็บ', kind: 'object',
+    help: 'ปรับหน้าตาทั้งเว็บ — ดูผลในช่องตัวอย่างทันทีก่อนกด "บันทึก" · กด "คืนค่าเริ่มต้น" เพื่อกลับไปใช้ธีมของแบรนด์',
+    fields: [
+      { key: 'primary', label: 'สีหลัก (ปุ่มหลัก ลิงก์ จุดโฟกัส)', type: 'color' },
+      { key: 'primaryInk', label: 'สีหลักแบบเข้ม (ตอนชี้เมาส์)', type: 'color' },
+      { key: 'accent', label: 'สีเน้น (ปุ่มขอคำปรึกษา/ขอเดโม)', type: 'color' },
+      { key: 'ink', label: 'สีกรมท่า (ตัวอักษรหลัก แถบบน ท้ายเว็บ หัวหน้าย่อย)', type: 'color' },
+      { key: 'ink2', label: 'สีข้อความรอง', type: 'color' },
+      { key: 'ground', label: 'สีพื้นหลังเว็บ', type: 'color' },
+      { key: 'fontHead', label: 'ฟอนต์หัวข้อ', type: 'select', options: () => FONT_CHOICES.map(f => [f, f] as [string, string]) },
+      { key: 'fontBody', label: 'ฟอนต์เนื้อความ', type: 'select', options: () => FONT_CHOICES.map(f => [f, f] as [string, string]) },
+      { key: 'textScale', label: 'ขนาดตัวอักษรทั้งเว็บ', type: 'range', min: 80, max: 130, step: 5, unit: '%' },
+      { key: 'headScale', label: 'ขนาดหัวข้อเพิ่มเติม', type: 'range', min: 70, max: 140, step: 5, unit: '%', help: 'ปรับเฉพาะหัวข้อใหญ่ (Hero หัวส่วน หัวหน้าย่อย) เพิ่มจากขนาดตัวอักษรทั้งเว็บ' },
+      { key: 'radius', label: 'ความโค้งมุมการ์ดและปุ่ม', type: 'range', min: 0, max: 28, step: 1, unit: 'px' },
+      { key: 'sectionSpace', label: 'ระยะบน-ล่างของแต่ละส่วน (จอกว้าง)', type: 'range', min: 40, max: 140, step: 4, unit: 'px' },
+      { key: 'maxWidth', label: 'ความกว้างเนื้อหาสูงสุด', type: 'range', min: 1000, max: 1400, step: 20, unit: 'px' },
     ],
   },
   {

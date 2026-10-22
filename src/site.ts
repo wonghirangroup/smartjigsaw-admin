@@ -149,9 +149,56 @@ export const HOME = {
   contactTitle: 'คุยกับทีมงานของเรา', contactText: 'บอกโจทย์ธุรกิจของคุณ แล้วเราจะแนะนำโซลูชันที่เหมาะสม',
 }
 
+// ---- ธีม: สี ฟอนต์ ขนาด — แอดมินปรับได้ (หมวด "ธีม") แล้ว applyTheme() เขียนลงตัวแปร CSS ที่ :root ----
+export const FONT_CHOICES = ['Kanit', 'Prompt', 'Sarabun', 'Noto Sans Thai', 'IBM Plex Sans Thai', 'Mitr', 'Athiti', 'Mali', 'Pridi', 'Chonburi'] as const
+export const THEME = {
+  primary: '#1369d5', primaryInk: '#0d52ad', accent: '#e0641f', ink: '#0b1e36', ink2: '#44546f', ground: '#f5f7fa',
+  fontHead: 'Kanit', fontBody: 'Kanit',
+  textScale: 100,    // % ขนาดตัวอักษรทั้งเว็บ (80–130)
+  headScale: 100,    // % ขนาดหัวข้อเพิ่มเติม (70–140)
+  radius: 14,        // px ความโค้งของการ์ด/ปุ่ม (0–28)
+  sectionSpace: 84,  // px ระยะบน-ล่างของแต่ละส่วน ค่าสูงสุดบนจอกว้าง (40–140)
+  maxWidth: 1180,    // px ความกว้างเนื้อหาสูงสุด (1000–1400)
+}
+const clampNum = (v: unknown, min: number, max: number, d: number) => { const n = Number(v); return Number.isFinite(n) ? Math.min(max, Math.max(min, n)) : d }
+const okColor = (v: unknown, d: string) => (typeof v === 'string' && /^#[0-9a-f]{6}$/i.test(v) ? v : d)
+const okFont = (v: unknown, d: string) => ((FONT_CHOICES as readonly string[]).includes(String(v)) ? String(v) : d)
+
+function loadFont(name: string) {
+  if (name === 'Kanit' || typeof document === 'undefined') return // Kanit โหลดอยู่ใน index.html แล้ว
+  const id = `font-${name.replace(/\s+/g, '-')}`
+  if (document.getElementById(id)) return
+  const link = document.createElement('link')
+  link.id = id; link.rel = 'stylesheet'
+  link.href = `https://fonts.googleapis.com/css2?family=${name.replace(/ /g, '+')}:wght@300;400;500;600;700&display=swap`
+  document.head.appendChild(link)
+}
+
+// ค่าที่ไม่ถูกต้อง (สีผิดรูปแบบ ฟอนต์นอกรายการ ตัวเลขเกินช่วง) จะถูกแทนด้วยค่าเริ่มต้น/ตัดให้อยู่ในช่วง — กันค่าที่แอดมินกรอกผิดทำให้เว็บพัง
+export function applyTheme(t: Partial<typeof THEME> = THEME) {
+  if (typeof document === 'undefined') return
+  const D = { primary: '#1369d5', primaryInk: '#0d52ad', accent: '#e0641f', ink: '#0b1e36', ink2: '#44546f', ground: '#f5f7fa', fontHead: 'Kanit', fontBody: 'Kanit' }
+  const st = document.documentElement.style
+  st.setProperty('--primary', okColor(t.primary, D.primary))
+  st.setProperty('--primary-ink', okColor(t.primaryInk, D.primaryInk))
+  st.setProperty('--accent', okColor(t.accent, D.accent))
+  st.setProperty('--ink', okColor(t.ink, D.ink))
+  st.setProperty('--ink-2', okColor(t.ink2, D.ink2))
+  st.setProperty('--ground', okColor(t.ground, D.ground))
+  const fh = okFont(t.fontHead, D.fontHead), fb = okFont(t.fontBody, D.fontBody)
+  loadFont(fh); loadFont(fb)
+  st.setProperty('--font-head', `'${fh}', 'Noto Sans Thai', system-ui, sans-serif`)
+  st.setProperty('--font-body', `'${fb}', 'Noto Sans Thai', system-ui, sans-serif`)
+  st.setProperty('--text-scale', String(clampNum(t.textScale, 80, 130, 100) / 100))
+  st.setProperty('--head-scale', String(clampNum(t.headScale, 70, 140, 100) / 100))
+  st.setProperty('--radius', `${clampNum(t.radius, 0, 28, 14)}px`)
+  st.setProperty('--section-y', `${clampNum(t.sectionSpace, 40, 140, 84)}px`)
+  st.setProperty('--maxw', `${clampNum(t.maxWidth, 1000, 1400, 1180)}px`)
+}
+
 // ---- ระบบแอดมิน: ค่าที่แอดมินแก้ไขได้ เก็บที่ server และถูกนำมาทับค่าเริ่มต้นข้างบนตอนเปิดเว็บ ----
 // แก้ค่าใน object/array เดิมโดยตรง (ไม่สร้างใหม่) เพื่อให้ทุกหน้าที่ import อยู่แล้วเห็นค่าใหม่
-export const EDITABLE: Record<string, unknown> = { NAV, BRAND, SOCIAL, HERO, HOME, VIDEOS, ADS, COMPANY, CUSTOMERS, EVENTS, NEWS, PRODUCTS, ARTICLES, SERVICES, COURSES }
+export const EDITABLE: Record<string, unknown> = { THEME, NAV, BRAND, SOCIAL, HERO, HOME, VIDEOS, ADS, COMPANY, CUSTOMERS, EVENTS, NEWS, PRODUCTS, ARTICLES, SERVICES, COURSES }
 
 let navCustom = false
 export function applyOverride(key: string, value: unknown) {
@@ -183,7 +230,12 @@ export function applyOverrides(all: Record<string, unknown>) {
 }
 
 // กันลิงก์/รูปที่แอดมินกรอกมาไม่ปลอดภัย (javascript: ฯลฯ) — ใช้กับทุก href และ url ที่มาจากข้อมูล
-export const safeUrl = (u?: string) => (u && /^(\/(?!\/)|https?:\/\/|tel:|mailto:)/.test(u) ? u : undefined)
+// หน้าแอดมินอยู่คนละโดเมน (VITE_API_URL) — ไฟล์ที่อัปโหลดจึงต้องโหลดจากโดเมนนั้น
+export const API_BASE = ((import.meta.env.VITE_API_URL as string | undefined) ?? '').replace(/\/$/, '')
+export const safeUrl = (u?: string) => {
+  if (!u || !/^(\/(?!\/)|https?:\/\/|tel:|mailto:)/.test(u)) return undefined
+  return u.startsWith('/uploads/') ? API_BASE + u : u
+}
 export const cssUrl = (u?: string) => { const s = safeUrl(u); return s ? `url("${encodeURI(s).replace(/"/g, '%22')}")` : undefined }
 
 export const thaiDate =(iso: string) => {
