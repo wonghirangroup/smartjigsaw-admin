@@ -58,6 +58,16 @@ export const PRODUCTS: Product[] = [
   },
 ]
 
+// โปรแกรมสำเร็จรูปของ Smart Jigsaw — แถบปุ่มใต้ Hero หน้าแรก (เพิ่ม/ลบ/แก้ได้ที่แอดมิน หมวด "โปรแกรมของเรา")
+// to: ลิงก์เว็บของโปรแกรมนั้น (https://… เปิดแท็บใหม่) — ว่าง = ไปหน้าติดต่อเรา · logo: โลโก้ PNG พื้นโปร่ง (ไม่ใส่ = แสดงชื่อเป็นตัวอักษร)
+export interface Program { name: string; tagline: string; color: string; color2: string; logo?: string; to: string }
+export const PROGRAMS: Program[] = [
+  { name: 'GrowStore', tagline: 'ระบบขายหน้าร้านสำหรับร้านปลีก (POS)', color: '#EA580C', color2: '#F5A623', to: '' },
+  { name: 'Yoonai', tagline: 'ระบบเช็กชื่อ ลางาน และ HR ผ่าน LINE', color: '#244B83', color2: '#2DA6DD', to: '' },
+  { name: 'Weajer', tagline: 'ระบบบริหารงานหน่วยรถและติดตาม GPS', color: '#0E7C70', color2: '#3DBE8F', to: '' },
+  { name: 'SyncZag', tagline: 'ระบบบริหารโปรเจกต์ งาน และเอกสารทีม', color: '#D93A22', color2: '#FF6A3D', to: '' },
+]
+
 export interface Article { slug: string; title: string; category: 'ERP' | 'POS' | 'ข่าวสาร'; date: string; excerpt: string; body: string[] }
 
 // บทความตัวอย่างเชิงความรู้ทั่วไป (ไม่ได้อ้างถึงลูกค้าหรือรางวัลของบริษัท) — แก้/ลบ/เพิ่มของจริงที่หน้าแอดมิน
@@ -141,7 +151,7 @@ export const HERO: HeroSlide[] = [
 
 // หัวข้อและคำอธิบายของแต่ละส่วนในหน้าแรก
 export const HOME = {
-  programsTitle: 'บริการของ Smart Jigsaw',
+  programsTitle: 'โปรแกรมสำเร็จรูปของ Smart Jigsaw',
   videosTitle: 'ตัวอย่างผลงานและการใช้งานระบบ', videosText: 'ฟังก์ชันที่ใช้งานจริงในระบบของเรา',
   companyTag: 'Smart Jigsaw',
   customersTitle: 'ลูกค้าของเรา', customersText: 'ธุรกิจที่ไว้วางใจให้เราดูแลระบบ',
@@ -227,7 +237,7 @@ export function applyTheme(t: Partial<typeof THEME> = THEME) {
 
 // ---- ระบบแอดมิน: ค่าที่แอดมินแก้ไขได้ เก็บที่ server และถูกนำมาทับค่าเริ่มต้นข้างบนตอนเปิดเว็บ ----
 // แก้ค่าใน object/array เดิมโดยตรง (ไม่สร้างใหม่) เพื่อให้ทุกหน้าที่ import อยู่แล้วเห็นค่าใหม่
-export const EDITABLE: Record<string, unknown> = { THEME, NAV, BRAND, SOCIAL, HERO, HOME, VIDEOS, ADS, COMPANY, CUSTOMERS, EVENTS, NEWS, PRODUCTS, ARTICLES, SERVICES, COURSES }
+export const EDITABLE: Record<string, unknown> = { THEME, PROGRAMS, NAV, BRAND, SOCIAL, HERO, HOME, VIDEOS, ADS, COMPANY, CUSTOMERS, EVENTS, NEWS, PRODUCTS, ARTICLES, SERVICES, COURSES }
 
 let navCustom = false
 export function applyOverride(key: string, value: unknown) {
