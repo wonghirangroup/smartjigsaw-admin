@@ -138,6 +138,7 @@ export const NEWS: NewsItem[] = []
 // สไลด์ Hero หน้าแรก — image (ไม่บังคับ) จะแสดงเป็นภาพพื้นหลัง/ภาพประกอบแทนไอคอน
 export interface HeroSlide {
   tag: string; title: string; lead: string; color: string; image?: string
+  fit?: 'whole' | 'contain' | 'cover' // โหมดแบนเนอร์: whole = แสดงทั้งภาพพอดีความกว้าง สูงตามภาพ (ค่าเริ่มต้น) · contain = ความสูงคงที่ เห็นทั้งภาพ · cover = เต็มกรอบ ตัดขอบ (ซูม/โฟกัสได้)
   imageZoom?: number; imageX?: number; imageY?: number     // โหมดแบนเนอร์: ซูม (%) และจุดโฟกัส (% ซ้าย→ขวา / บน→ล่าง) บนเดสก์ท็อป
   mobileZoom?: number; mobileX?: number; mobileY?: number // เช่นเดียวกัน สำหรับมือถือ/แท็บเล็ต (จอ ≤ 920px)
   buttons?: 'show' | 'hide'      // ปุ่มบนสไลด์ (ไม่ใส่ = แสดง)
