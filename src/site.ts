@@ -138,6 +138,7 @@ export const NEWS: NewsItem[] = []
 // สไลด์ Hero หน้าแรก — image (ไม่บังคับ) จะแสดงเป็นภาพพื้นหลัง/ภาพประกอบแทนไอคอน
 export interface HeroSlide {
   tag: string; title: string; lead: string; color: string; image?: string
+  shade?: 'on' | 'off' // โหมดแบนเนอร์เต็มจอ: เงาทึบทับภาพ (ไม่ใส่ = เปิด)
   imageMobile?: string // โหมดโปสเตอร์: ภาพสำหรับมือถือ (ถ้าไม่ใส่ ใช้ภาพหลักย่อลง)
   primaryLabel: string; primaryTo: string; secondaryLabel: string; secondaryTo: string
   chip1: string; chip2: string

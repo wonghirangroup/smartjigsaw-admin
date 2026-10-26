@@ -59,13 +59,14 @@ export const SECTIONS: Section[] = [
   {
     key: 'HERO', label: 'Hero (สไลด์หน้าแรก)', group: 'หน้าแรก', kind: 'list', titleKey: 'title',
     help: 'สไลด์ใหญ่บนสุดของหน้าแรก เลื่อนอัตโนมัติ ถ้าใส่ภาพ ภาพจะแสดงในกรอบด้านขวาแทนไอคอน',
-    blank: () => ({ tag: '', title: 'หัวข้อใหม่', lead: '', color: '#0E7C86', image: '', primaryLabel: 'ดูรายละเอียด', primaryTo: '/products', secondaryLabel: 'ขอใบเสนอราคา', secondaryTo: '/contact', chip1: '', chip2: '' }),
+    blank: () => ({ tag: '', title: 'หัวข้อใหม่', lead: '', color: '#0E7C86', image: '', shade: 'on', primaryLabel: 'ดูรายละเอียด', primaryTo: '/products', secondaryLabel: 'ขอใบเสนอราคา', secondaryTo: '/contact', chip1: '', chip2: '' }),
     fields: [
       { key: 'tag', label: 'ป้ายเล็กเหนือหัวข้อ', type: 'text' },
       { key: 'title', label: 'หัวข้อ', type: 'text' },
       { key: 'lead', label: 'คำอธิบายใต้หัวข้อ', type: 'textarea' },
       { key: 'color', label: 'สีพื้นหลัง', type: 'color' },
       { key: 'image', label: 'ภาพประกอบ / ภาพพื้นหลัง / ภาพโปสเตอร์ (ตามรูปแบบ Hero)', type: 'image', spec: 'hero' },
+      { key: 'shade', label: 'เงาทึบทับภาพ (รูปแบบแบนเนอร์เต็มจอ)', type: 'select', options: () => [['on', 'เปิด — ช่วยให้อ่านข้อความบนภาพ'], ['off', 'ปิด — เห็นภาพสีสดเต็มๆ']], help: 'ปิดเมื่อภาพมีข้อความ/ตกแต่งมาแล้ว หรือภาพมืดอยู่แล้ว · ภาพที่มีข้อความอยู่ในภาพ แนะนำใช้รูปแบบ “โปสเตอร์เต็มกว้าง” ในเมนูธีม (ไม่ครอป ไม่มีเงา)' },
       { key: 'imageMobile', label: 'ภาพสำหรับมือถือ (เฉพาะรูปแบบโปสเตอร์)', type: 'image', spec: 'heroPosterMobile' },
       { key: 'primaryLabel', label: 'ปุ่มหลัก: ข้อความ', type: 'text' },
       { key: 'primaryTo', label: 'ปุ่มหลัก: ลิงก์', type: 'text', help: link },
