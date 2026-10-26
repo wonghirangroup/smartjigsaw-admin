@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react'
-import { ArrowDown, ArrowUp, Copy, ExternalLink, Eye, EyeOff, Image as ImageIcon, KeyRound, LogOut, Mail, Monitor, Plus, RotateCw, Smartphone, Trash2, Upload, X } from 'lucide-react'
+import { ArrowDown, ArrowUp, Copy, ExternalLink, Eye, EyeOff, Image as ImageIcon, KeyRound, LogOut, Mail, Monitor, Plus, RotateCw, Smartphone, Tablet, Trash2, Upload, X } from 'lucide-react'
 import { EDITABLE, applyOverride, safeUrl } from '../site'
 import { FILE_RULES, IMAGE_SPECS, SECTIONS, VIDEO_SPEC, type Field, type Section } from './schema'
 import './admin.css'
@@ -116,8 +116,8 @@ function FieldEditor({ f, value, onChange, toast }: { f: Field; value: Json; onC
     case 'textarea': control = <textarea id={id} rows={3} value={value ?? ''} onChange={e => onChange(e.target.value)} />; break
     case 'range': control = (
       <div className="a-row">
-        <input id={id} type="range" min={f.min} max={f.max} step={f.step ?? 1} value={value ?? f.min} onChange={e => onChange(Number(e.target.value))} style={{ flex: 1, padding: 0 }} />
-        <b className="a-size" style={{ minWidth: 64, textAlign: 'right' }}>{value ?? f.min}{f.unit}</b>
+        <input id={id} type="range" min={f.min} max={f.max} step={f.step ?? 1} value={value ?? f.def ?? f.min} onChange={e => onChange(Number(e.target.value))} style={{ flex: 1, padding: 0 }} />
+        <b className="a-size" style={{ minWidth: 64, textAlign: 'right' }}>{value ?? f.def ?? f.min}{f.unit}</b>
       </div>); break
     case 'number': control = <input id={id} type="number" min={0} value={value ?? 0} onChange={e => onChange(Number(e.target.value))} />; break
     case 'color': control = (
@@ -424,7 +424,7 @@ interface Focus { key: string; index: number | null; tick: number }
 const PAGES: [string, string][] = [['/', 'หน้าแรก'], ['/products', 'บริการ'], ['/services', 'วิธีทำงาน'], ['/about', 'เกี่ยวกับเรา'], ['/knowledge', 'ศูนย์ความรู้'], ['/customers', 'ลูกค้า'], ['/contact', 'ติดต่อเรา']]
 
 function Preview({ siteUrl, frame, path, onClose }: { siteUrl: string; frame: React.RefObject<HTMLIFrameElement>; path: string; onClose: () => void }) {
-  const [device, setDevice] = useState<'desktop' | 'mobile'>('desktop')
+  const [device, setDevice] = useState<'desktop' | 'tablet' | 'mobile'>('desktop')
   const [size, setSize] = useState({ w: 600, h: 700 })
   const box = useRef<HTMLDivElement>(null)
   const origin = new URL(siteUrl).origin
@@ -433,7 +433,7 @@ function Preview({ siteUrl, frame, path, onClose }: { siteUrl: string; frame: Re
     const ro = new ResizeObserver(() => setSize({ w: el.clientWidth, h: el.clientHeight }))
     ro.observe(el); setSize({ w: el.clientWidth, h: el.clientHeight }); return () => ro.disconnect()
   }, [])
-  const design = device === 'desktop' ? 1280 : 390
+  const design = device === 'desktop' ? 1280 : device === 'tablet' ? 768 : 390
   const scale = Math.min(1, size.w / design)
   const goto = (p: string) => frame.current?.contentWindow?.postMessage({ type: 'sj-goto', path: p }, origin)
   return (
@@ -446,6 +446,7 @@ function Preview({ siteUrl, frame, path, onClose }: { siteUrl: string; frame: Re
         </select>
         <div className="a-row">
           <button className={`a-btn ghost${device === 'desktop' ? ' on' : ''}`} onClick={() => setDevice('desktop')} aria-label="มุมมองคอมพิวเตอร์" title="คอมพิวเตอร์"><Monitor size={15} /></button>
+          <button className={`a-btn ghost${device === 'tablet' ? ' on' : ''}`} onClick={() => setDevice('tablet')} aria-label="มุมมองแท็บเล็ต" title="แท็บเล็ต"><Tablet size={15} /></button>
           <button className={`a-btn ghost${device === 'mobile' ? ' on' : ''}`} onClick={() => setDevice('mobile')} aria-label="มุมมองมือถือ" title="มือถือ"><Smartphone size={15} /></button>
           <button className="a-btn ghost" onClick={() => { if (frame.current) frame.current.src = frame.current.src }} aria-label="โหลดตัวอย่างใหม่" title="โหลดใหม่"><RotateCw size={15} /></button>
           <button className="a-btn ghost close" onClick={onClose} aria-label="ซ่อนตัวอย่าง"><EyeOff size={15} /></button>
@@ -454,7 +455,7 @@ function Preview({ siteUrl, frame, path, onClose }: { siteUrl: string; frame: Re
       <p className="a-note a-preview-hint">คลิกส่วนใดของเว็บเพื่อไปแก้ที่ฟอร์มนั้น · สิ่งที่พิมพ์จะขึ้นในตัวอย่างทันที แต่จะแสดงจริงบนเว็บเมื่อกด “บันทึก”</p>
       <div className="a-preview-box" ref={box}>
         <iframe ref={frame} title="ตัวอย่างหน้าเว็บ" src={`${siteUrl}/?sj-preview=1`}
-          style={{ width: design, height: size.h / scale, transform: `scale(${scale})`, marginInline: device === 'mobile' ? 'auto' : 0, left: device === 'mobile' ? (size.w - design * scale) / 2 : 0 }} />
+          style={{ width: design, height: size.h / scale, transform: `scale(${scale})`, marginInline: device !== 'desktop' ? 'auto' : 0, left: device !== 'desktop' ? Math.max(0, (size.w - design * scale) / 2) : 0 }} />
       </div>
     </aside>
   )
