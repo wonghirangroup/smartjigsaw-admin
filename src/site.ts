@@ -174,6 +174,7 @@ export const THEME = {
   text: '#0b1e36',      // สีตัวอักษรเนื้อความ (ธีมเข้ม = ขาว)
   onPrimary: '#ffffff', // สีตัวอักษรบนปุ่มสีหลัก/สีเน้น (สีส้มสว่างควรใช้ตัวอักษรกรมท่า)
   buttonShape: 'rounded' as 'rounded' | 'pill', // ปุ่มมุมโค้ง หรือทรงแคปซูล
+  heroColor: '' as string, // สีพื้นสไลด์ Hero ทุกอัน (ว่าง = ใช้สีของแต่ละสไลด์ที่ตั้งในหมวด Hero)
   heroStyle: 'split' as 'split' | 'banner' | 'poster',      // Hero แบบข้อความ+ภาพข้าง หรือแบบแบนเนอร์เต็มจอ ข้อความชิดล่างซ้าย
   fontHead: 'Kanit', fontBody: 'Kanit',
   bodyWeight: 400,   // น้ำหนักตัวอักษรเนื้อความ 400/500/600 (ธีมเข้มควรใช้ 500 ขึ้นไปให้อ่านชัด)

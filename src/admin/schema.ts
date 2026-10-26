@@ -197,6 +197,7 @@ export const SECTIONS: Section[] = [
       { key: 'surface', label: 'สีพื้นการ์ด / แถบเมนู / ช่องกรอก', type: 'color' },
       { key: 'text', label: 'สีตัวอักษรเนื้อความ (ธีมเข้มใช้สีขาว)', type: 'color' },
       { key: 'onPrimary', label: 'สีตัวอักษรบนปุ่มสีหลัก/สีเน้น', type: 'color', help: 'สีส้ม/เหลืองสว่างควรใช้ตัวอักษรสีกรมท่า' },
+      { key: 'heroColor', label: 'สีพื้นสไลด์ Hero ทุกอัน (ล้างให้ว่าง = ใช้สีของแต่ละสไลด์)', type: 'color', help: 'ช่วยให้ Hero เข้ากับชุดสีของธีม — ไม่กระทบสไลด์ที่ใช้ภาพพื้นหลังเต็มจอ' },
       { key: 'fontHead', label: 'ฟอนต์หัวข้อ', type: 'select', options: () => FONT_CHOICES.map(f => [f, f] as [string, string]) },
       { key: 'fontBody', label: 'ฟอนต์เนื้อความ', type: 'select', options: () => FONT_CHOICES.map(f => [f, f] as [string, string]) },
       { key: 'buttonShape', label: 'รูปทรงปุ่ม', type: 'select', options: () => [['rounded', 'มุมโค้ง'], ['pill', 'ทรงแคปซูล (โค้งเต็ม)']] },
