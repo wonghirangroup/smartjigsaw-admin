@@ -159,12 +159,13 @@ function ObjectFields({ fields, value, onChange, toast }: { fields: Field[]; val
   return <>{fields.map(f => <FieldEditor key={f.key} f={f} value={value?.[f.key]} onChange={v => onChange({ ...value, [f.key]: v })} toast={toast} />)}</>
 }
 
-function ListEditor({ fields, titleKey, blank, value, onChange, toast, fixed, nested, focus }: {
-  fields: Field[]; titleKey?: string; blank?: () => Record<string, unknown>; value: Json; onChange: (v: Json) => void; toast: (t: string, bad?: boolean) => void; fixed?: boolean; nested?: boolean; focus?: Focus | null
+function ListEditor({ fields, titleKey, blank, value, onChange, toast, fixed, nested, focus, onOpen }: {
+  fields: Field[]; titleKey?: string; blank?: () => Record<string, unknown>; value: Json; onChange: (v: Json) => void; toast: (t: string, bad?: boolean) => void; fixed?: boolean; nested?: boolean; focus?: Focus | null; onOpen?: (i: number | null) => void
 }) {
   const items: Json[] = Array.isArray(value) ? value : []
   const [open, setOpen] = useState<number | null>(nested ? null : (focus?.index ?? 0))
   const root = useRef<HTMLDivElement>(null)
+  useEffect(() => { if (!nested) onOpen?.(open) }, [open]) // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (nested || focus?.index == null) return
     setOpen(focus.index)
@@ -260,12 +261,14 @@ function validate(s: Section, v: Json): string | null {
   return null
 }
 
-function SectionEditor({ section, toast, onDraft, focus }: { section: Section; toast: (t: string, bad?: boolean) => void; onDraft: (key: string, value: Json) => void; focus: Focus | null }) {
+function SectionEditor({ section, toast, onDraft, focus, onView }: { section: Section; toast: (t: string, bad?: boolean) => void; onDraft: (key: string, value: Json) => void; focus: Focus | null; onView: (key: string, index: number | null) => void }) {
   const [value, setValue] = useState<Json>(() => liveValue(section))
   const [dirty, setDirty] = useState(false)
   const [saving, setSaving] = useState(false)
   const dirtyRef = useRef(false)
   dirtyRef.current = dirty
+  // เปิดหมวดนี้ → ล็อกตัวอย่างไปที่ส่วนนี้ (ฟอร์มแบบรายการจะแจ้งรายการที่เปิดเองผ่าน onOpen)
+  useEffect(() => { if (section.kind !== 'list') onView(section.key, null) }, []) // eslint-disable-line react-hooks/exhaustive-deps
   // ทุกครั้งที่แก้ฟอร์ม ส่งร่างไปแสดงในหน้า preview ทันที (ยังไม่บันทึกจริง)
   const change = (v: Json) => { setValue(v); setDirty(true); onDraft(section.key, v) }
   // ออกจากหมวดโดยไม่บันทึก → คืนหน้า preview เป็นค่าที่บันทึกไว้
@@ -302,7 +305,7 @@ function SectionEditor({ section, toast, onDraft, focus }: { section: Section; t
       <div className="a-card">
         {section.kind === 'object'
           ? <ObjectFields fields={section.fields} value={value} onChange={change} toast={toast} />
-          : <ListEditor fields={section.fields} titleKey={section.titleKey} blank={section.blank} value={value} onChange={change} toast={toast} fixed={section.fixed} focus={focus} />}
+          : <ListEditor fields={section.fields} titleKey={section.titleKey} blank={section.blank} value={value} onChange={change} toast={toast} fixed={section.fixed} focus={focus} onOpen={i => onView(section.key, i)} />}
       </div>
       {section.key === 'THEME' && <ThemeExtras value={value} onChange={change} />}
     </section>
@@ -492,10 +495,21 @@ export default function Admin() {
   const frame = useRef<HTMLIFrameElement>(null)
   const drafts = useRef(new Map<string, Json>())
   const siteOrigin = (() => { try { return siteUrl ? new URL(siteUrl).origin : '' } catch { return '' } })()
+  const toFrame = useCallback((msg: unknown) => {
+    if (siteOrigin) frame.current?.contentWindow?.postMessage(msg, siteOrigin)
+  }, [siteOrigin])
   const sendDraft = useCallback((key: string, value: Json) => {
     if (!siteOrigin) return
     frame.current?.contentWindow?.postMessage({ type: 'sj-preview', key, value: clone(value) }, siteOrigin)
   }, [siteOrigin])
+  // ล็อกตัวอย่างไปที่ส่วนที่กำลังแก้ (หน่วงเล็กน้อยกันส่งถี่) — ไม่เลื่อนตอนพิมพ์ ส่งเฉพาะตอนเปลี่ยนหมวด/เปิดรายการ
+  const lastView = useRef<{ key: string; index: number | null } | null>(null)
+  const viewTimer = useRef<number>()
+  const onView = useCallback((key: string, index: number | null) => {
+    lastView.current = { key, index }
+    window.clearTimeout(viewTimer.current)
+    viewTimer.current = window.setTimeout(() => { toFrame({ type: 'sj-view', key, index }) }, 180)
+  }, [toFrame])
   const onDraft = useCallback((key: string, value: Json) => { drafts.current.set(key, value); sendDraft(key, value) }, [sendDraft])
   useEffect(() => { fetch('/api/config').then(r => r.json()).then(d => setSiteUrl(d.siteUrl || '')).catch(() => {}) }, [])
   useEffect(() => {
@@ -503,12 +517,12 @@ export default function Admin() {
     const onMsg = (e: MessageEvent) => {
       if (e.origin !== siteOrigin || e.source !== frame.current?.contentWindow) return
       const d = e.data; if (!d || typeof d !== 'object') return
-      if (d.type === 'sj-ready') drafts.current.forEach((v, k) => sendDraft(k, v))
+      if (d.type === 'sj-ready') { drafts.current.forEach((v, k) => sendDraft(k, v)); if (lastView.current) toFrame({ type: 'sj-view', ...lastView.current }) }
       else if (d.type === 'sj-path' && typeof d.path === 'string') setPvPath(d.path)
       else if (d.type === 'sj-focus' && SECTIONS.some(s => s.key === d.key)) { setTab(d.key); setFocus({ key: d.key, index: typeof d.index === 'number' ? d.index : null, tick: Date.now() }) }
     }
     window.addEventListener('message', onMsg); return () => window.removeEventListener('message', onMsg)
-  }, [siteOrigin, sendDraft])
+  }, [siteOrigin, sendDraft, toFrame])
   const check = useCallback(() => {
     fetch('/api/me').then(r => r.json()).then(d => setAuth(d.admin ? 'in' : 'out')).catch(() => setAuth('down'))
   }, [])
@@ -545,7 +559,7 @@ export default function Admin() {
         </nav>
       </aside>
       <main className="a-main">
-        {section ? <SectionEditor key={section.key} section={section} toast={show} onDraft={onDraft} focus={focus?.key === section.key ? focus : null} /> : tab === '_guide' ? <Guide /> : tab === '_media' ? <Library toast={show} /> : tab === '_msgs' ? <Messages toast={show} /> : <Password toast={show} />}
+        {section ? <SectionEditor key={section.key} section={section} toast={show} onDraft={onDraft} onView={onView} focus={focus?.key === section.key ? focus : null} /> : tab === '_guide' ? <Guide /> : tab === '_media' ? <Library toast={show} /> : tab === '_msgs' ? <Messages toast={show} /> : <Password toast={show} />}
       </main>
       {siteUrl && showPreview && <Preview siteUrl={siteUrl} frame={frame} path={pvPath} onClose={() => setShowPreview(false)} />}
       {node}
