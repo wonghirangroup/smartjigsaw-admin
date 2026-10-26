@@ -59,7 +59,7 @@ export const SECTIONS: Section[] = [
   {
     key: 'HERO', label: 'Hero (สไลด์หน้าแรก)', group: 'หน้าแรก', kind: 'list', titleKey: 'title',
     help: 'สไลด์ใหญ่บนสุดของหน้าแรก เลื่อนอัตโนมัติ ถ้าใส่ภาพ ภาพจะแสดงในกรอบด้านขวาแทนไอคอน',
-    blank: () => ({ tag: '', title: 'หัวข้อใหม่', lead: '', color: '#0E7C86', image: '', shade: 'on', primaryLabel: 'ดูรายละเอียด', primaryTo: '/products', secondaryLabel: 'ขอใบเสนอราคา', secondaryTo: '/contact', chip1: '', chip2: '' }),
+    blank: () => ({ tag: '', title: 'หัวข้อใหม่', lead: '', color: '#0E7C86', image: '', shade: 'on', buttons: 'show', overlayText: 'show', primaryLabel: 'ดูรายละเอียด', primaryTo: '/products', secondaryLabel: 'ขอใบเสนอราคา', secondaryTo: '/contact', chip1: '', chip2: '' }),
     fields: [
       { key: 'tag', label: 'ป้ายเล็กเหนือหัวข้อ', type: 'text' },
       { key: 'title', label: 'หัวข้อ', type: 'text' },
@@ -68,6 +68,8 @@ export const SECTIONS: Section[] = [
       { key: 'image', label: 'ภาพประกอบ / ภาพพื้นหลัง / ภาพโปสเตอร์ (ตามรูปแบบ Hero)', type: 'image', spec: 'hero' },
       { key: 'shade', label: 'เงาทึบทับภาพ (รูปแบบแบนเนอร์เต็มจอ)', type: 'select', options: () => [['on', 'เปิด — ช่วยให้อ่านข้อความบนภาพ'], ['off', 'ปิด — เห็นภาพสีสดเต็มๆ']], help: 'ปิดเมื่อภาพมีข้อความ/ตกแต่งมาแล้ว หรือภาพมืดอยู่แล้ว · ภาพที่มีข้อความอยู่ในภาพ แนะนำใช้รูปแบบ “โปสเตอร์เต็มกว้าง” ในเมนูธีม (ไม่ครอป ไม่มีเงา)' },
       { key: 'imageMobile', label: 'ภาพสำหรับมือถือ (เฉพาะรูปแบบโปสเตอร์)', type: 'image', spec: 'heroPosterMobile' },
+      { key: 'overlayText', label: 'ป้าย / หัวข้อ / คำอธิบาย บนสไลด์', type: 'select', options: () => [['show', 'แสดง'], ['hide', 'ซ่อน (ภาพมีข้อความอยู่แล้ว)']], help: 'ซ่อนแล้วข้อความยังอยู่ในหน้าสำหรับโปรแกรมอ่านหน้าจอและ SEO — ควรกรอกให้ตรงกับข้อความในภาพ' },
+      { key: 'buttons', label: 'ปุ่มบนสไลด์ (เรียนรู้เพิ่มเติม / ติดต่อเรา)', type: 'select', options: () => [['show', 'แสดง'], ['hide', 'ซ่อนทั้งสองปุ่ม']], help: 'อยากซ่อนแค่ปุ่มเดียว: ล้างช่อง “ข้อความ” ของปุ่มนั้นให้ว่าง' },
       { key: 'primaryLabel', label: 'ปุ่มหลัก: ข้อความ', type: 'text' },
       { key: 'primaryTo', label: 'ปุ่มหลัก: ลิงก์', type: 'text', help: link },
       { key: 'secondaryLabel', label: 'ปุ่มรอง: ข้อความ', type: 'text' },
