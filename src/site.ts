@@ -62,10 +62,10 @@ export const PRODUCTS: Product[] = [
 // to: ลิงก์เว็บของโปรแกรมนั้น (https://… เปิดแท็บใหม่) — ว่าง = ไปหน้าติดต่อเรา · logo: โลโก้ PNG พื้นโปร่ง (ไม่ใส่ = แสดงชื่อเป็นตัวอักษร)
 export interface Program { name: string; tagline: string; color: string; color2: string; logo?: string; to: string }
 export const PROGRAMS: Program[] = [
-  { name: 'GrowStore', tagline: 'ระบบขายหน้าร้านสำหรับร้านปลีก (POS)', color: '#EA580C', color2: '#F5A623', to: '' },
-  { name: 'Yoonai', tagline: 'ระบบเช็กชื่อ ลางาน และ HR ผ่าน LINE', color: '#244B83', color2: '#2DA6DD', to: '' },
-  { name: 'Weajer', tagline: 'ระบบบริหารงานหน่วยรถและติดตาม GPS', color: '#0E7C70', color2: '#3DBE8F', to: '' },
-  { name: 'SyncZag', tagline: 'ระบบบริหารโปรเจกต์ งาน และเอกสารทีม', color: '#D93A22', color2: '#FF6A3D', to: '' },
+  { name: 'GrowStore', tagline: 'ระบบขายหน้าร้านสำหรับร้านปลีก (POS)', color: '#EA580C', color2: '#F5A623', logo: '/images/gen/logo-growstore.png', to: '' },
+  { name: 'Yoonai', tagline: 'ระบบเช็กชื่อ ลางาน และ HR ผ่าน LINE', color: '#244B83', color2: '#2DA6DD', logo: '/images/gen/logo-yoonai.png', to: '' },
+  { name: 'Weajer', tagline: 'ระบบบริหารงานหน่วยรถและติดตาม GPS', color: '#0E7C70', color2: '#3DBE8F', logo: '/images/gen/logo-weajer.png', to: '' },
+  { name: 'SyncZag', tagline: 'ระบบบริหารโปรเจกต์ งาน และเอกสารทีม', color: '#D93A22', color2: '#FF6A3D', logo: '/images/gen/logo-synczag.png', to: '' },
 ]
 
 export interface Article { slug: string; title: string; category: 'ERP' | 'POS' | 'ข่าวสาร'; date: string; excerpt: string; body: string[] }
@@ -119,23 +119,23 @@ export const VIDEOS: Video[] = [
 // พื้นที่โฆษณา/โปรโมชัน — ใส่ image (ไฟล์ใน public/ เช่น '/img/ad1.jpg') เพื่อใช้ภาพจริง; ไม่ใส่จะใช้สีไล่เฉด
 export interface Ad { title: string; text: string; cta: string; to: string; color: string; image?: string }
 export const ADS: Ad[] = [
-  { title: 'ระบบ POS ที่ออกแบบมาเพื่อธุรกิจของคุณ', text: 'จัดการรับออเดอร์และคุมสต็อกได้ในระบบเดียวกัน ครบจบในระบบเดียว', cta: 'ดูรายละเอียด', to: '/products/erp-pos', color: '#1369D5' },
-  { title: 'AI เข้าช่วยเพิ่มยอดขาย', text: 'วิเคราะห์ข้อมูลและนำเสนอแนวทางการขายอย่างชาญฉลาด', cta: 'ดู AI Agent', to: '/products/ai-agent', color: '#0B1E36' },
-  { title: 'ติดตามการจัดส่งได้ทุกขั้นตอน', text: 'อัปเดตสถานะคิวจัดส่งเรียลไทม์ วางแผนเส้นทางอัตโนมัติ', cta: 'ปรึกษาทีมงาน', to: '/contact', color: '#0F4C9A' },
+  { title: 'ระบบ POS ที่ออกแบบมาเพื่อธุรกิจของคุณ', text: 'จัดการรับออเดอร์และคุมสต็อกได้ในระบบเดียวกัน ครบจบในระบบเดียว', cta: 'ดูรายละเอียด', to: '/products/erp-pos', color: '#1369D5' , image: '/images/gen/ad-pos.webp' },
+  { title: 'AI เข้าช่วยเพิ่มยอดขาย', text: 'วิเคราะห์ข้อมูลและนำเสนอแนวทางการขายอย่างชาญฉลาด', cta: 'ดู AI Agent', to: '/products/ai-agent', color: '#0B1E36' , image: '/images/gen/ad-ai.webp' },
+  { title: 'ติดตามการจัดส่งได้ทุกขั้นตอน', text: 'อัปเดตสถานะคิวจัดส่งเรียลไทม์ วางแผนเส้นทางอัตโนมัติ', cta: 'ปรึกษาทีมงาน', to: '/contact', color: '#0F4C9A' , image: '/images/gen/ad-delivery.webp' },
 ]
 
 export const COMPANY = {
   heading: 'เทคโนโลยีคือชิ้นส่วนจิ๊กซอว์ที่ทรงพลัง',
   text: ['Smart Jigsaw คือบริษัทที่ปรึกษาด้านเทคโนโลยีดิจิทัล ก่อตั้งขึ้นบนความเชื่อว่าเทคโนโลยีไม่ใช่เพียงเครื่องมือ แต่คือชิ้นส่วนจิ๊กซอว์ที่ช่วยขับเคลื่อนธุรกิจสู่ยุคดิจิทัลอย่างยั่งยืน', 'เราไม่ได้พัฒนาระบบลอยๆ แต่ทำงานผสมผสานคน กระบวนการ และเทคโนโลยี ออกแบบฟังก์ชันที่หยิบจับง่าย เข้าใจพฤติกรรมจริงของผู้ใช้งาน เพื่อให้ทุกชิ้นส่วนทางธุรกิจประกบเข้าหากันได้อย่างสวยงาม'],
   stats: [{ n: 'เรียบง่าย', label: 'Simplicity' }, { n: 'จริงใจ', label: 'Sincerity' }, { n: 'ลงมือทำจริง', label: 'Action-Oriented' }, { n: 'ยั่งยืน', label: 'Sustainability' }],
-  image: undefined as string | undefined,
+  image: '/images/gen/company.webp' as string | undefined,
 }
 
 // ลูกค้า/กิจกรรม/ข่าว — ยังไม่มีข้อมูลจริง ปล่อยว่างไว้ (ส่วนนั้นจะไม่แสดงบนเว็บ) เพิ่มที่หน้าแอดมินเมื่อพร้อม
 // url: เว็บไซต์ของลูกค้า (https://…) · systems: ระบบของเราที่ลูกค้าใช้ คั่นด้วยจุลภาค เช่น "GrowStore, Yoonai"
 export interface Customer { name: string; logo?: string; place?: string; text?: string; image?: string; color?: string; url?: string; systems?: string }
 export const CUSTOMERS: Customer[] = [
-  { name: 'โกดังวงษ์หิรัญค้าส่ง', url: 'https://wonghiran.com/', systems: 'GrowStore, Yoonai', text: 'ร้านค้าส่งที่ใช้ระบบ GrowStore บริหารการขายหน้าร้าน และ Yoonai บริหารงานบุคคลของทีมงาน', color: '#0E7C86' },
+  { name: 'โกดังวงษ์หิรัญค้าส่ง', url: 'https://wonghiran.com/', systems: 'GrowStore, Yoonai', image: '/images/gen/wonghiran.webp', text: 'ร้านค้าส่งที่ใช้ระบบ GrowStore บริหารการขายหน้าร้าน และ Yoonai บริหารงานบุคคลของทีมงาน', color: '#0E7C86' },
 ]
 
 // ทีมผู้พัฒนา — แสดงในหน้า "เกี่ยวกับเรา" (เพิ่ม/แก้ที่แอดมิน หมวด "ทีมผู้พัฒนา") · ไม่มีรายการ = ซ่อนส่วนนี้
