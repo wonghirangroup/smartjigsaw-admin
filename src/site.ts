@@ -91,6 +91,7 @@ export const COURSES: { id: string; title: string; level: string; hours: number;
 export const NAV: NavItem[] = [
   { label: 'บริการของเรา', to: '/products', children: PRODUCTS.map(p => ({ label: p.name, to: `/products/${p.slug}` })) },
   { label: 'ผลงาน', to: '/#works' },
+  { label: 'ลูกค้าของเรา', to: '/customers' },
   { label: 'วิธีทำงาน', to: '/services' },
   { label: 'เกี่ยวกับ', to: '', children: [{ label: 'เกี่ยวกับเรา', to: '/about' }, { label: 'ศูนย์ความรู้', to: '/knowledge' }] },
   { label: 'ติดต่อเรา', to: '/contact' },
