@@ -129,11 +129,29 @@ app.get('/api/config', (_req, res) => res.json({ siteUrl: SITE_URL }))
 
 app.get('/api/content', (_req, res) => { res.setHeader('Cache-Control', 'no-cache'); res.json(content) })
 
-app.put('/api/content/:key', requireAuth, json, (req, res) => {
+// ลิงก์แชร์ของ Facebook (facebook.com/share/p/xxxx) ฝังโพสต์ไม่ได้ — แปลงเป็นลิงก์จริงของโพสต์ตอนบันทึก (ตามการเปลี่ยนเส้นทางของ Facebook)
+// เรียกเฉพาะโดเมน facebook.com ตามรูปแบบที่กำหนดเท่านั้น และตัดพารามิเตอร์ติดตามออก
+const FB_SHARE = /^https:\/\/(www\.)?facebook\.com\/share\/[pvr]\/[\w-]+\/?$/
+async function resolveFbShare(url) {
+  try {
+    const r = await fetch(url, { redirect: 'follow', headers: { 'User-Agent': 'Mozilla/5.0' }, signal: AbortSignal.timeout(6000) })
+    let u = new URL(r.url)
+    // จากเซิร์ฟเวอร์ Facebook อาจเปลี่ยนไปหน้าเข้าสู่ระบบ โดยเก็บปลายทางจริงไว้ในพารามิเตอร์ next
+    if (/^\/login/.test(u.pathname) && u.searchParams.get('next')) u = new URL(u.searchParams.get('next'))
+    if (!/(^|\.)facebook\.com$/.test(u.hostname) || /\/(share|login)/.test(u.pathname)) return url
+    for (const k of ['rdid', 'share_url', 'mibextid']) u.searchParams.delete(k)
+    return u.toString()
+  } catch { return url }
+}
+
+app.put('/api/content/:key', requireAuth, json, async (req, res) => {
   const { key } = req.params
   if (!KEYS.has(key)) return res.status(404).json({ error: 'unknown_key' })
   const v = req.body?.value
   if (v === null || typeof v !== 'object') return res.status(400).json({ error: 'invalid_value' })
+  if (key === 'SOCIAL_POSTS' && Array.isArray(v)) {
+    for (const p of v) if (p && typeof p.url === 'string' && FB_SHARE.test(p.url.trim())) p.url = await resolveFbShare(p.url.trim())
+  }
   content = { ...content, [key]: v }
   writeJson('content.json', content)
   res.json({ ok: true })

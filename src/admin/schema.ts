@@ -118,7 +118,7 @@ export const SECTIONS: Section[] = [
     blank: () => ({ platform: 'facebook', url: '', title: 'โพสต์ใหม่', text: '', cover: '', date: '', show: 'embed' }),
     fields: [
       { key: 'platform', label: 'แพลตฟอร์ม', type: 'select', options: () => [['facebook', 'Facebook'], ['instagram', 'Instagram'], ['tiktok', 'TikTok'], ['youtube', 'YouTube'], ['other', 'อื่นๆ (การ์ดเปิดลิงก์)']] },
-      { key: 'url', label: 'ลิงก์โพสต์/คลิป', type: 'text', help: 'ใช้ลิงก์เต็มขึ้นต้น https:// เช่น facebook.com/…/posts/… · instagram.com/reel/… · tiktok.com/@…/video/… · youtu.be/… (ลิงก์ย่อของ TikTok เช่น vm.tiktok.com ฝังไม่ได้)' },
+      { key: 'url', label: 'ลิงก์โพสต์/คลิป', type: 'text', help: 'ใช้ลิงก์เต็มขึ้นต้น https:// (ลิงก์แชร์ของ Facebook แบบ facebook.com/share/p/… ระบบจะแปลงเป็นลิงก์จริงให้ตอนบันทึก) เช่น facebook.com/…/posts/… · instagram.com/reel/… · tiktok.com/@…/video/… · youtu.be/… (ลิงก์ย่อของ TikTok เช่น vm.tiktok.com ฝังไม่ได้)' },
       { key: 'show', label: 'รูปแบบการแสดง', type: 'select', options: () => [['embed', 'ฝังโพสต์ในหน้าเว็บ (กดแล้วโหลด)'], ['card', 'การ์ดเปิดโพสต์ต้นฉบับอย่างเดียว']] },
       { key: 'title', label: 'หัวข้อ', type: 'text' },
       { key: 'text', label: 'คำอธิบายสั้น', type: 'textarea' },
