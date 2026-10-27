@@ -137,6 +137,10 @@ export const CUSTOMERS: Customer[] = [
   { name: 'โกดังวงษ์หิรัญค้าส่ง', url: 'https://wonghiran.com/', systems: 'GrowStore, Yoonai', text: 'ร้านค้าส่งที่ใช้ระบบ GrowStore บริหารการขายหน้าร้าน และ Yoonai บริหารงานบุคคลของทีมงาน', color: '#0E7C86' },
 ]
 
+// ทีมผู้พัฒนา — แสดงในหน้า "เกี่ยวกับเรา" (เพิ่ม/แก้ที่แอดมิน หมวด "ทีมผู้พัฒนา") · ไม่มีรายการ = ซ่อนส่วนนี้
+export interface TeamMember { name: string; role: string; text?: string; photo?: string; color?: string }
+export const TEAM: TeamMember[] = []
+
 export interface EventItem { title: string; date: string; place: string; text: string; image?: string; color: string }
 export const EVENTS: EventItem[] = []
 
@@ -169,6 +173,7 @@ export const HOME = {
   videosTitle: 'ตัวอย่างผลงานและการใช้งานระบบ', videosText: 'ฟังก์ชันที่ใช้งานจริงในระบบของเรา',
   socialTitle: 'ติดตามเราบนโซเชียล', socialText: 'คลิปและโพสต์ล่าสุดจากช่องทางของเรา',
   companyTag: 'Smart Jigsaw',
+  teamTitle: 'ทีมผู้พัฒนา', teamText: 'คนเบื้องหลังระบบที่ใช้งานจริงในธุรกิจของลูกค้า',
   customersTitle: 'ลูกค้าของเรา', customersText: 'ธุรกิจที่ไว้วางใจให้เราดูแลระบบ',
   eventsTitle: 'กิจกรรมและงานสัมมนา', eventsText: 'เข้าร่วมเพื่อเรียนรู้การใช้ระบบและพบทีมงานของเรา',
   newsTitle: 'ข่าวและสื่อ', newsText: 'ข่าวประชาสัมพันธ์และบทสัมภาษณ์ล่าสุด',
@@ -253,7 +258,7 @@ export function applyTheme(t: Partial<typeof THEME> = THEME) {
 
 // ---- ระบบแอดมิน: ค่าที่แอดมินแก้ไขได้ เก็บที่ server และถูกนำมาทับค่าเริ่มต้นข้างบนตอนเปิดเว็บ ----
 // แก้ค่าใน object/array เดิมโดยตรง (ไม่สร้างใหม่) เพื่อให้ทุกหน้าที่ import อยู่แล้วเห็นค่าใหม่
-export const EDITABLE: Record<string, unknown> = { THEME, PROGRAMS, NAV, BRAND, SOCIAL, HERO, HOME, VIDEOS, SOCIAL_POSTS, ADS, COMPANY, CUSTOMERS, EVENTS, NEWS, PRODUCTS, ARTICLES, SERVICES, COURSES }
+export const EDITABLE: Record<string, unknown> = { THEME, PROGRAMS, NAV, BRAND, SOCIAL, HERO, HOME, TEAM, VIDEOS, SOCIAL_POSTS, ADS, COMPANY, CUSTOMERS, EVENTS, NEWS, PRODUCTS, ARTICLES, SERVICES, COURSES }
 
 let navCustom = false
 export function applyOverride(key: string, value: unknown) {

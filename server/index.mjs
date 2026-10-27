@@ -26,7 +26,7 @@ function writeJson(name, value) {
 }
 
 // คีย์เนื้อหาที่อนุญาตให้แอดมินเขียน (ต้องตรงกับ EDITABLE ใน src/site.ts)
-const KEYS = new Set(['THEME', 'PROGRAMS', 'NAV', 'BRAND', 'SOCIAL', 'HERO', 'HOME', 'VIDEOS', 'SOCIAL_POSTS', 'ADS', 'COMPANY', 'CUSTOMERS', 'EVENTS', 'NEWS', 'PRODUCTS', 'ARTICLES', 'SERVICES', 'COURSES'])
+const KEYS = new Set(['THEME', 'PROGRAMS', 'NAV', 'BRAND', 'SOCIAL', 'HERO', 'HOME', 'VIDEOS', 'TEAM', 'SOCIAL_POSTS', 'ADS', 'COMPANY', 'CUSTOMERS', 'EVENTS', 'NEWS', 'PRODUCTS', 'ARTICLES', 'SERVICES', 'COURSES'])
 let content = readJson('content.json', {})
 
 // ---------- รหัสผ่านแอดมิน ----------

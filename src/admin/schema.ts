@@ -127,6 +127,18 @@ export const SECTIONS: Section[] = [
     ],
   },
   {
+    key: 'TEAM', label: 'ทีมผู้พัฒนา', group: 'หน้าอื่นๆ', kind: 'list', titleKey: 'name',
+    help: 'แสดงในหน้า “เกี่ยวกับเรา” เป็นการ์ดคนละใบ · ถ้าไม่ใส่รูป จะแสดงวงกลมสีพร้อมตัวอักษรแรกของชื่อ · ไม่มีรายการ = ซ่อนส่วนนี้',
+    blank: () => ({ name: 'ชื่อ-นามสกุล', role: 'ตำแหน่ง', text: '', photo: '', color: '#1369D5' }),
+    fields: [
+      { key: 'name', label: 'ชื่อ', type: 'text' },
+      { key: 'role', label: 'ตำแหน่ง/หน้าที่ (เช่น นักพัฒนาซอฟต์แวร์)', type: 'text' },
+      { key: 'text', label: 'แนะนำสั้นๆ', type: 'textarea' },
+      { key: 'photo', label: 'รูปถ่าย (สี่เหลี่ยมจัตุรัส ใบหน้าอยู่กลางภาพ)', type: 'image', spec: 'square' },
+      { key: 'color', label: 'สีวงกลม (เมื่อไม่มีรูป)', type: 'color' },
+    ],
+  },
+  {
     key: 'ADS', label: 'พื้นที่โฆษณา/โปรโมชัน', group: 'หน้าแรก', kind: 'list', titleKey: 'title',
     help: 'แบนเนอร์ใหญ่กลางหน้า เลื่อนอัตโนมัติ ถ้าใส่ภาพ จะใช้ภาพเป็นพื้นหลังเต็มกรอบ (ควรเป็นภาพที่ตัวอักษรสีขาวอ่านออก)',
     blank: () => ({ title: 'โปรโมชันใหม่', text: '', cta: 'ดูรายละเอียด', to: '/contact', color: '#0E7C86', image: '' }),
@@ -193,6 +205,7 @@ export const SECTIONS: Section[] = [
     fields: [
       { key: 'programsTitle', label: 'ปุ่มโปรแกรม 4 ปุ่ม: หัวข้อ', type: 'text' },
       { key: 'socialTitle', label: 'คอนเทนต์โซเชียล: หัวข้อ', type: 'text' }, { key: 'socialText', label: 'คอนเทนต์โซเชียล: คำอธิบาย', type: 'text' },
+      { key: 'teamTitle', label: 'ทีมผู้พัฒนา (หน้าเกี่ยวกับเรา): หัวข้อ', type: 'text' }, { key: 'teamText', label: 'ทีมผู้พัฒนา: คำอธิบาย', type: 'text' },
       { key: 'videosTitle', label: 'วิดีโอ: หัวข้อ', type: 'text' }, { key: 'videosText', label: 'วิดีโอ: คำอธิบาย', type: 'text' },
       { key: 'companyTag', label: 'บริษัท: ป้ายหัวข้อ', type: 'text' },
       { key: 'customersTitle', label: 'ลูกค้า: หัวข้อ', type: 'text' }, { key: 'customersText', label: 'ลูกค้า: คำอธิบาย', type: 'text' },
