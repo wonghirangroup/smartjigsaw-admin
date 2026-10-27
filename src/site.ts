@@ -142,6 +142,11 @@ export const CUSTOMERS: Customer[] = [
 export interface TeamMember { name: string; role: string; text?: string; photo?: string; color?: string }
 export const TEAM: TeamMember[] = []
 
+// รางวัลและการรับรอง (รางวัล ใบรับรอง มาตรฐาน) — แสดงบนหน้าแรก · ไม่มีรายการ = ซ่อนส่วนนี้ (เพิ่มที่แอดมิน หมวด "รางวัลและการรับรอง")
+// image: ตรา/ใบรับรอง (ไม่บังคับ) · url: ลิงก์ตรวจสอบหรืออ่านเพิ่ม (ไม่บังคับ)
+export interface Award { title: string; issuer: string; year: string; text?: string; image?: string; url?: string }
+export const AWARDS: Award[] = []
+
 export interface EventItem { title: string; date: string; place: string; text: string; image?: string; color: string }
 export const EVENTS: EventItem[] = []
 
@@ -174,6 +179,7 @@ export const HOME = {
   videosTitle: 'ตัวอย่างผลงานและการใช้งานระบบ', videosText: 'ฟังก์ชันที่ใช้งานจริงในระบบของเรา',
   socialTitle: 'ติดตามเราบนโซเชียล', socialText: 'คลิปและโพสต์ล่าสุดจากช่องทางของเรา',
   companyTag: 'Smart Jigsaw',
+  awardsTitle: 'รางวัลและการรับรอง', awardsText: 'ความน่าเชื่อถือที่ได้รับจากหน่วยงานและสถาบัน',
   teamTitle: 'ทีมผู้พัฒนา', teamText: 'คนเบื้องหลังระบบที่ใช้งานจริงในธุรกิจของลูกค้า',
   customersTitle: 'ลูกค้าของเรา', customersText: 'ธุรกิจที่ไว้วางใจให้เราดูแลระบบ',
   eventsTitle: 'กิจกรรมและงานสัมมนา', eventsText: 'เข้าร่วมเพื่อเรียนรู้การใช้ระบบและพบทีมงานของเรา',
@@ -261,7 +267,7 @@ export function applyTheme(t: Partial<typeof THEME> = THEME) {
 // แก้ค่าใน object/array เดิมโดยตรง (ไม่สร้างใหม่) เพื่อให้ทุกหน้าที่ import อยู่แล้วเห็นค่าใหม่
 // คำแปลภาษาอังกฤษเพิ่มเติมที่แอดมินกรอก (ข้อความไทย → อังกฤษ) ใช้ทับ/เสริมพจนานุกรมใน i18n.ts
 export const TRANSLATIONS: { th: string; en: string }[] = []
-export const EDITABLE: Record<string, unknown> = { THEME, TRANSLATIONS, PROGRAMS, NAV, BRAND, SOCIAL, HERO, HOME, TEAM, VIDEOS, SOCIAL_POSTS, ADS, COMPANY, CUSTOMERS, EVENTS, NEWS, PRODUCTS, ARTICLES, SERVICES, COURSES }
+export const EDITABLE: Record<string, unknown> = { THEME, TRANSLATIONS, PROGRAMS, NAV, BRAND, SOCIAL, HERO, HOME, TEAM, AWARDS, VIDEOS, SOCIAL_POSTS, ADS, COMPANY, CUSTOMERS, EVENTS, NEWS, PRODUCTS, ARTICLES, SERVICES, COURSES }
 
 let navCustom = false
 export function applyOverride(key: string, value: unknown) {

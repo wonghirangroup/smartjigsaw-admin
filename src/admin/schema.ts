@@ -148,6 +148,19 @@ export const SECTIONS: Section[] = [
     ],
   },
   {
+    key: 'AWARDS', label: 'รางวัลและการรับรอง', group: 'หน้าแรก', kind: 'list', titleKey: 'title',
+    help: 'รางวัล ใบรับรอง หรือมาตรฐานที่ได้รับ — แสดงเป็นการ์ดบนหน้าแรก · ใส่เฉพาะที่ได้รับจริงและแสดงได้ · ไม่มีรายการ = ซ่อนส่วนนี้ · ถ้าใส่ลิงก์ ผู้เข้าชมกดการ์ดเพื่อเปิดหน้าตรวจสอบ/อ่านเพิ่มได้',
+    blank: () => ({ title: 'ชื่อรางวัลหรือการรับรอง', issuer: '', year: '', text: '', image: '', url: '' }),
+    fields: [
+      { key: 'title', label: 'ชื่อรางวัล/การรับรอง', type: 'text' },
+      { key: 'issuer', label: 'หน่วยงานที่มอบให้', type: 'text' },
+      { key: 'year', label: 'ปี (เช่น 2569 หรือ 2026)', type: 'text' },
+      { key: 'text', label: 'รายละเอียดสั้นๆ', type: 'textarea' },
+      { key: 'image', label: 'ตรา/ใบรับรอง (ไม่ใส่ = ใช้ไอคอนรางวัล)', type: 'image', spec: 'logo' },
+      { key: 'url', label: 'ลิงก์ตรวจสอบ/อ่านเพิ่ม (ไม่บังคับ)', type: 'text', help: 'https://…' },
+    ],
+  },
+  {
     key: 'ADS', label: 'พื้นที่โฆษณา/โปรโมชัน', group: 'หน้าแรก', kind: 'list', titleKey: 'title',
     help: 'แบนเนอร์ใหญ่กลางหน้า เลื่อนอัตโนมัติ ถ้าใส่ภาพ จะใช้ภาพเป็นพื้นหลังเต็มกรอบ (ควรเป็นภาพที่ตัวอักษรสีขาวอ่านออก)',
     blank: () => ({ title: 'โปรโมชันใหม่', text: '', cta: 'ดูรายละเอียด', to: '/contact', color: '#0E7C86', image: '' }),
@@ -215,6 +228,7 @@ export const SECTIONS: Section[] = [
       { key: 'programsTitle', label: 'ปุ่มโปรแกรม 4 ปุ่ม: หัวข้อ', type: 'text' },
       { key: 'socialTitle', label: 'คอนเทนต์โซเชียล: หัวข้อ', type: 'text' }, { key: 'socialText', label: 'คอนเทนต์โซเชียล: คำอธิบาย', type: 'text' },
       { key: 'teamTitle', label: 'ทีมผู้พัฒนา (หน้าเกี่ยวกับเรา): หัวข้อ', type: 'text' }, { key: 'teamText', label: 'ทีมผู้พัฒนา: คำอธิบาย', type: 'text' },
+      { key: 'awardsTitle', label: 'รางวัลและการรับรอง: หัวข้อ', type: 'text' }, { key: 'awardsText', label: 'รางวัลและการรับรอง: คำอธิบาย', type: 'text' },
       { key: 'videosTitle', label: 'วิดีโอ: หัวข้อ', type: 'text' }, { key: 'videosText', label: 'วิดีโอ: คำอธิบาย', type: 'text' },
       { key: 'companyTag', label: 'บริษัท: ป้ายหัวข้อ', type: 'text' },
       { key: 'customersTitle', label: 'ลูกค้า: หัวข้อ', type: 'text' }, { key: 'customersText', label: 'ลูกค้า: คำอธิบาย', type: 'text' },
