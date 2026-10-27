@@ -259,7 +259,9 @@ export function applyTheme(t: Partial<typeof THEME> = THEME) {
 
 // ---- ระบบแอดมิน: ค่าที่แอดมินแก้ไขได้ เก็บที่ server และถูกนำมาทับค่าเริ่มต้นข้างบนตอนเปิดเว็บ ----
 // แก้ค่าใน object/array เดิมโดยตรง (ไม่สร้างใหม่) เพื่อให้ทุกหน้าที่ import อยู่แล้วเห็นค่าใหม่
-export const EDITABLE: Record<string, unknown> = { THEME, PROGRAMS, NAV, BRAND, SOCIAL, HERO, HOME, TEAM, VIDEOS, SOCIAL_POSTS, ADS, COMPANY, CUSTOMERS, EVENTS, NEWS, PRODUCTS, ARTICLES, SERVICES, COURSES }
+// คำแปลภาษาอังกฤษเพิ่มเติมที่แอดมินกรอก (ข้อความไทย → อังกฤษ) ใช้ทับ/เสริมพจนานุกรมใน i18n.ts
+export const TRANSLATIONS: { th: string; en: string }[] = []
+export const EDITABLE: Record<string, unknown> = { THEME, TRANSLATIONS, PROGRAMS, NAV, BRAND, SOCIAL, HERO, HOME, TEAM, VIDEOS, SOCIAL_POSTS, ADS, COMPANY, CUSTOMERS, EVENTS, NEWS, PRODUCTS, ARTICLES, SERVICES, COURSES }
 
 let navCustom = false
 export function applyOverride(key: string, value: unknown) {
@@ -301,6 +303,7 @@ export const cssUrl = (u?: string) => { const s = safeUrl(u); return s ? `url("$
 
 export const thaiDate =(iso: string) => {
   const [y, m, d] = iso.split('-').map(Number)
-  const M = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.']
+  const en = typeof document !== 'undefined' && document.documentElement.lang === 'en'
+  const M = en ? ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'] : ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.']
   return `${d} ${M[m - 1]} ${y}`
 }
