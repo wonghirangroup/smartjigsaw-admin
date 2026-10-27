@@ -152,11 +152,13 @@ export const SECTIONS: Section[] = [
   {
     key: 'CUSTOMERS', label: 'Our Customer', group: 'หน้าแรก', kind: 'list', titleKey: 'name',
     help: 'ใส่โลโก้ลูกค้าได้ ถ้าไม่ใส่จะแสดงเป็นชื่อ',
-    blank: () => ({ name: 'ลูกค้าใหม่', logo: '', place: '', text: '', image: '', color: '#0E7C86' }),
+    blank: () => ({ name: 'ลูกค้าใหม่', logo: '', place: '', url: '', systems: '', text: '', image: '', color: '#0E7C86' }),
     fields: [
       { key: 'name', label: 'ชื่อลูกค้า', type: 'text' },
       { key: 'logo', label: 'โลโก้', type: 'image', spec: 'logo' },
       { key: 'place', label: 'ที่ตั้ง (เช่น จ.นครปฐม)', type: 'text' },
+      { key: 'url', label: 'เว็บไซต์ของลูกค้า', type: 'text', help: 'https://… — กดที่โลโก้/ชื่อแล้วเปิดเว็บนี้ในแท็บใหม่' },
+      { key: 'systems', label: 'ระบบของเราที่ลูกค้าใช้', type: 'text', help: 'คั่นด้วยจุลภาค เช่น GrowStore, Yoonai' },
       { key: 'text', label: 'ข้อความแนะนำร้าน (แสดงในหน้า ลูกค้าของเรา)', type: 'textarea' },
       { key: 'image', label: 'ภาพร้าน/โปสเตอร์', type: 'image', spec: 'square' },
       { key: 'color', label: 'สีพื้น (เมื่อไม่มีภาพ)', type: 'color' },

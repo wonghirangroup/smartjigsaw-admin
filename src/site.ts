@@ -131,8 +131,11 @@ export const COMPANY = {
 }
 
 // ลูกค้า/กิจกรรม/ข่าว — ยังไม่มีข้อมูลจริง ปล่อยว่างไว้ (ส่วนนั้นจะไม่แสดงบนเว็บ) เพิ่มที่หน้าแอดมินเมื่อพร้อม
-export interface Customer { name: string; logo?: string; place?: string; text?: string; image?: string; color?: string }
-export const CUSTOMERS: Customer[] = []
+// url: เว็บไซต์ของลูกค้า (https://…) · systems: ระบบของเราที่ลูกค้าใช้ คั่นด้วยจุลภาค เช่น "GrowStore, Yoonai"
+export interface Customer { name: string; logo?: string; place?: string; text?: string; image?: string; color?: string; url?: string; systems?: string }
+export const CUSTOMERS: Customer[] = [
+  { name: 'โกดังวงษ์หิรัญค้าส่ง', url: 'https://wonghiran.com/', systems: 'GrowStore, Yoonai', text: 'ร้านค้าส่งที่ใช้ระบบ GrowStore บริหารการขายหน้าร้าน และ Yoonai บริหารงานบุคคลของทีมงาน', color: '#0E7C86' },
+]
 
 export interface EventItem { title: string; date: string; place: string; text: string; image?: string; color: string }
 export const EVENTS: EventItem[] = []
