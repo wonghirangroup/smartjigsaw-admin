@@ -99,6 +99,11 @@ export const NAV: NavItem[] = [
 // ช่องทางโซเชียลบน topbar — ใส่ลิงก์จริงที่หน้าแอดมิน (ว่าง = ไม่แสดง)
 export const SOCIAL: { label: string; href: string }[] = []
 
+// คอนเทนต์จากโซเชียล (โพสต์/คลิป Facebook · Instagram · TikTok · YouTube) — แสดงเป็นการ์ด กดแล้วโหลดตัวฝังของแพลตฟอร์มนั้น (ไม่โหลดล่วงหน้า)
+// show: 'embed' = ฝังโพสต์ในหน้า (ถ้าลิงก์รองรับ) · 'card' = การ์ดเปิดต้นฉบับอย่างเดียว · ไม่มีรายการ = ซ่อนส่วนนี้
+export interface SocialPost { platform: 'facebook' | 'instagram' | 'tiktok' | 'youtube' | 'other'; url: string; title: string; text: string; cover?: string; date?: string; show?: 'embed' | 'card' }
+export const SOCIAL_POSTS: SocialPost[] = []
+
 // ตัวอย่างผลงาน/การใช้งานระบบ — ใส่ youtubeId (ส่วนท้ายของลิงก์ YouTube) เพื่อให้กดเล่นได้ ถ้าเว้นว่างจะแสดงป้าย "เร็วๆ นี้"
 export interface Video { title: string; text: string; duration: string; product: string; youtubeId: string; file?: string; thumb?: string }
 export const VIDEOS: Video[] = [
@@ -159,6 +164,7 @@ export const HERO: HeroSlide[] = [
 export const HOME = {
   programsTitle: 'โปรแกรมสำเร็จรูปของ Smart Jigsaw',
   videosTitle: 'ตัวอย่างผลงานและการใช้งานระบบ', videosText: 'ฟังก์ชันที่ใช้งานจริงในระบบของเรา',
+  socialTitle: 'ติดตามเราบนโซเชียล', socialText: 'คลิปและโพสต์ล่าสุดจากช่องทางของเรา',
   companyTag: 'Smart Jigsaw',
   customersTitle: 'ลูกค้าของเรา', customersText: 'ธุรกิจที่ไว้วางใจให้เราดูแลระบบ',
   eventsTitle: 'กิจกรรมและงานสัมมนา', eventsText: 'เข้าร่วมเพื่อเรียนรู้การใช้ระบบและพบทีมงานของเรา',
@@ -244,7 +250,7 @@ export function applyTheme(t: Partial<typeof THEME> = THEME) {
 
 // ---- ระบบแอดมิน: ค่าที่แอดมินแก้ไขได้ เก็บที่ server และถูกนำมาทับค่าเริ่มต้นข้างบนตอนเปิดเว็บ ----
 // แก้ค่าใน object/array เดิมโดยตรง (ไม่สร้างใหม่) เพื่อให้ทุกหน้าที่ import อยู่แล้วเห็นค่าใหม่
-export const EDITABLE: Record<string, unknown> = { THEME, PROGRAMS, NAV, BRAND, SOCIAL, HERO, HOME, VIDEOS, ADS, COMPANY, CUSTOMERS, EVENTS, NEWS, PRODUCTS, ARTICLES, SERVICES, COURSES }
+export const EDITABLE: Record<string, unknown> = { THEME, PROGRAMS, NAV, BRAND, SOCIAL, HERO, HOME, VIDEOS, SOCIAL_POSTS, ADS, COMPANY, CUSTOMERS, EVENTS, NEWS, PRODUCTS, ARTICLES, SERVICES, COURSES }
 
 let navCustom = false
 export function applyOverride(key: string, value: unknown) {

@@ -113,6 +113,20 @@ export const SECTIONS: Section[] = [
     ],
   },
   {
+    key: 'SOCIAL_POSTS', label: 'คอนเทนต์โซเชียล (โพสต์/คลิป)', group: 'หน้าแรก', kind: 'list', titleKey: 'title',
+    help: 'วางลิงก์โพสต์หรือคลิปจาก Facebook / Instagram / TikTok / YouTube · ผู้เข้าชมกด “ดูโพสต์” แล้วจึงโหลดตัวฝังของแพลตฟอร์ม · ไม่มีรายการ = ซ่อนส่วนนี้ทั้งหมด · โพสต์ต้องตั้งเป็นสาธารณะ ถึงจะฝังได้',
+    blank: () => ({ platform: 'facebook', url: '', title: 'โพสต์ใหม่', text: '', cover: '', date: '', show: 'embed' }),
+    fields: [
+      { key: 'platform', label: 'แพลตฟอร์ม', type: 'select', options: () => [['facebook', 'Facebook'], ['instagram', 'Instagram'], ['tiktok', 'TikTok'], ['youtube', 'YouTube'], ['other', 'อื่นๆ (การ์ดเปิดลิงก์)']] },
+      { key: 'url', label: 'ลิงก์โพสต์/คลิป', type: 'text', help: 'ใช้ลิงก์เต็มขึ้นต้น https:// เช่น facebook.com/…/posts/… · instagram.com/reel/… · tiktok.com/@…/video/… · youtu.be/… (ลิงก์ย่อของ TikTok เช่น vm.tiktok.com ฝังไม่ได้)' },
+      { key: 'show', label: 'รูปแบบการแสดง', type: 'select', options: () => [['embed', 'ฝังโพสต์ในหน้าเว็บ (กดแล้วโหลด)'], ['card', 'การ์ดเปิดโพสต์ต้นฉบับอย่างเดียว']] },
+      { key: 'title', label: 'หัวข้อ', type: 'text' },
+      { key: 'text', label: 'คำอธิบายสั้น', type: 'textarea' },
+      { key: 'cover', label: 'ภาพปก (แสดงก่อนกดโหลด / ใช้กับการ์ด)', type: 'image', spec: 'thumb' },
+      { key: 'date', label: 'วันที่โพสต์', type: 'date' },
+    ],
+  },
+  {
     key: 'ADS', label: 'พื้นที่โฆษณา/โปรโมชัน', group: 'หน้าแรก', kind: 'list', titleKey: 'title',
     help: 'แบนเนอร์ใหญ่กลางหน้า เลื่อนอัตโนมัติ ถ้าใส่ภาพ จะใช้ภาพเป็นพื้นหลังเต็มกรอบ (ควรเป็นภาพที่ตัวอักษรสีขาวอ่านออก)',
     blank: () => ({ title: 'โปรโมชันใหม่', text: '', cta: 'ดูรายละเอียด', to: '/contact', color: '#0E7C86', image: '' }),
@@ -176,6 +190,7 @@ export const SECTIONS: Section[] = [
     key: 'HOME', label: 'หัวข้อแต่ละส่วนของหน้าแรก', group: 'หน้าแรก', kind: 'object',
     fields: [
       { key: 'programsTitle', label: 'ปุ่มโปรแกรม 4 ปุ่ม: หัวข้อ', type: 'text' },
+      { key: 'socialTitle', label: 'คอนเทนต์โซเชียล: หัวข้อ', type: 'text' }, { key: 'socialText', label: 'คอนเทนต์โซเชียล: คำอธิบาย', type: 'text' },
       { key: 'videosTitle', label: 'วิดีโอ: หัวข้อ', type: 'text' }, { key: 'videosText', label: 'วิดีโอ: คำอธิบาย', type: 'text' },
       { key: 'companyTag', label: 'บริษัท: ป้ายหัวข้อ', type: 'text' },
       { key: 'customersTitle', label: 'ลูกค้า: หัวข้อ', type: 'text' }, { key: 'customersText', label: 'ลูกค้า: คำอธิบาย', type: 'text' },
