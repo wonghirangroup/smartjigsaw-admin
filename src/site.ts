@@ -117,7 +117,7 @@ export const VIDEOS: Video[] = [
 ]
 
 // พื้นที่โฆษณา/โปรโมชัน — ใส่ image (ไฟล์ใน public/ เช่น '/img/ad1.jpg') เพื่อใช้ภาพจริง; ไม่ใส่จะใช้สีไล่เฉด
-export interface Ad { title: string; text: string; cta: string; to: string; color: string; image?: string }
+export interface Ad { title: string; text: string; cta: string; to: string; color: string; image?: string; button?: 'show' | 'hide' }
 export const ADS: Ad[] = [
   { title: 'ระบบ POS ที่ออกแบบมาเพื่อธุรกิจของคุณ', text: 'จัดการรับออเดอร์และคุมสต็อกได้ในระบบเดียวกัน ครบจบในระบบเดียว', cta: 'ดูรายละเอียด', to: '/products/erp-pos', color: '#1369D5' , image: '/images/gen/ad-pos.webp' },
   { title: 'AI เข้าช่วยเพิ่มยอดขาย', text: 'วิเคราะห์ข้อมูลและนำเสนอแนวทางการขายอย่างชาญฉลาด', cta: 'ดู AI Agent', to: '/products/ai-agent', color: '#0B1E36' , image: '/images/gen/ad-ai.webp' },

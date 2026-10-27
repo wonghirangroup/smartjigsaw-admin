@@ -167,6 +167,7 @@ export const SECTIONS: Section[] = [
     fields: [
       { key: 'title', label: 'หัวข้อ', type: 'text' },
       { key: 'text', label: 'รายละเอียด', type: 'textarea' },
+      { key: 'button', label: 'ปุ่ม (เช่น ดูรายละเอียด)', type: 'select', options: () => [['show', 'แสดง'], ['hide', 'ซ่อน']], help: 'ซ่อนเมื่อภาพมีปุ่ม/ข้อความอยู่แล้ว หรือไม่ต้องการลิงก์' },
       { key: 'cta', label: 'ข้อความบนปุ่ม', type: 'text' },
       { key: 'to', label: 'ลิงก์ของปุ่ม', type: 'text', help: link },
       { key: 'color', label: 'สีพื้นหลัง (เมื่อไม่มีภาพ)', type: 'color' },
