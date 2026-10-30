@@ -60,10 +60,11 @@ export const PRODUCTS: Product[] = [
 
 // โปรแกรมสำเร็จรูปของ Smart Jigsaw — แถบปุ่มใต้ Hero หน้าแรก (เพิ่ม/ลบ/แก้ได้ที่แอดมิน หมวด "โปรแกรมของเรา")
 // to: ลิงก์เว็บของโปรแกรมนั้น (https://… เปิดแท็บใหม่) — ว่าง = ไปหน้าติดต่อเรา · logo: โลโก้ PNG พื้นโปร่ง (ไม่ใส่ = แสดงชื่อเป็นตัวอักษร)
-export interface Program { name: string; tagline: string; color: string; color2: string; logo?: string; to: string }
+// image: ภาพแบนเนอร์ของโปรแกรม (ไม่บังคับ) — ใส่แล้วปุ่มจะแสดงเป็นภาพแบนเนอร์เต็มใบแทนปุ่มสี
+export interface Program { name: string; tagline: string; color: string; color2: string; logo?: string; to: string; image?: string }
 export const PROGRAMS: Program[] = [
-  { name: 'GrowStore', tagline: 'ระบบขายหน้าร้านสำหรับร้านปลีก (POS)', color: '#EA580C', color2: '#F5A623', logo: '/images/gen/logo-growstore.png', to: '' },
-  { name: 'Yoonai', tagline: 'ระบบเช็กชื่อ ลางาน และ HR ผ่าน LINE', color: '#244B83', color2: '#2DA6DD', logo: '/images/gen/logo-yoonai.png', to: '' },
+  { name: 'GrowStore', tagline: 'ระบบขายหน้าร้านสำหรับร้านปลีก (POS)', color: '#EA580C', color2: '#F5A623', logo: '/images/gen/logo-growstore.png', to: '', image: '/images/programs/growstore.webp' },
+  { name: 'Yoonai', tagline: 'ระบบเช็กชื่อ ลางาน และ HR ผ่าน LINE', color: '#244B83', color2: '#2DA6DD', logo: '/images/gen/logo-yoonai.png', to: '', image: '/images/programs/yoonai.webp' },
   { name: 'Weajer', tagline: 'ระบบบริหารงานหน่วยรถและติดตาม GPS', color: '#0E7C70', color2: '#3DBE8F', logo: '/images/gen/logo-weajer.png', to: '' },
   { name: 'SyncZag', tagline: 'ระบบบริหารโปรเจกต์ งาน และเอกสารทีม', color: '#D93A22', color2: '#FF6A3D', logo: '/images/gen/logo-synczag.png', to: '' },
 ]
@@ -147,7 +148,7 @@ export const TEAM: TeamMember[] = []
 export interface Award { title: string; issuer: string; year: string; text?: string; image?: string; url?: string }
 export const AWARDS: Award[] = []
 
-export interface EventItem { title: string; date: string; place: string; text: string; image?: string; color: string }
+export interface EventItem { title: string; date: string; place: string; text: string; image?: string; color: string; url?: string }
 export const EVENTS: EventItem[] = []
 
 export interface NewsItem { title: string; outlet: string; date: string; text: string; image?: string; color: string }
@@ -180,7 +181,7 @@ export const HOME = {
   socialTitle: 'ติดตามเราบนโซเชียล', socialText: 'คลิปและโพสต์ล่าสุดจากช่องทางของเรา',
   companyTag: 'Smart Jigsaw',
   awardsTitle: 'รางวัลและการรับรอง', awardsText: 'ความน่าเชื่อถือที่ได้รับจากหน่วยงานและสถาบัน',
-  teamTitle: 'ทีมผู้พัฒนา', teamText: 'คนเบื้องหลังระบบที่ใช้งานจริงในธุรกิจของลูกค้า',
+  teamTag: 'Our Team', teamTitle: 'ทีมผู้พัฒนา', teamText: 'คนเบื้องหลังระบบที่ใช้งานจริงในธุรกิจของลูกค้า',
   customersTitle: 'ลูกค้าของเรา', customersText: 'ธุรกิจที่ไว้วางใจให้เราดูแลระบบ',
   eventsTitle: 'กิจกรรมและงานสัมมนา', eventsText: 'เข้าร่วมเพื่อเรียนรู้การใช้ระบบและพบทีมงานของเรา',
   newsTitle: 'ข่าวและสื่อ', newsText: 'ข่าวประชาสัมพันธ์และบทสัมภาษณ์ล่าสุด',
