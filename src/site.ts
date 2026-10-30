@@ -65,7 +65,7 @@ export interface Program { name: string; tagline: string; color: string; color2:
 export const PROGRAMS: Program[] = [
   { name: 'GrowStore', tagline: 'ระบบขายหน้าร้านสำหรับร้านปลีก (POS)', color: '#EA580C', color2: '#F5A623', logo: '/images/gen/logo-growstore.png', to: '', image: '/images/programs/growstore.webp' },
   { name: 'Yoonai', tagline: 'ระบบเช็กชื่อ ลางาน และ HR ผ่าน LINE', color: '#244B83', color2: '#2DA6DD', logo: '/images/gen/logo-yoonai.png', to: '', image: '/images/programs/yoonai.webp' },
-  { name: 'Weajer', tagline: 'ระบบบริหารงานหน่วยรถและติดตาม GPS', color: '#0E7C70', color2: '#3DBE8F', logo: '/images/gen/logo-weajer.png', to: '' },
+  { name: 'Weajer', tagline: 'ระบบบริหารงานหน่วยรถและติดตาม GPS', color: '#0E7C70', color2: '#3DBE8F', logo: '/images/gen/logo-weajer.png', to: '', image: '/images/programs/weajer.webp' },
   { name: 'SyncZag', tagline: 'ระบบบริหารโปรเจกต์ งาน และเอกสารทีม', color: '#D93A22', color2: '#FF6A3D', logo: '/images/gen/logo-synczag.png', to: '' },
 ]
 
